@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shantika_cubit/ui/typography.dart';
+
 import '../color.dart';
 import '../dimension.dart';
 import '../style.dart';
@@ -11,8 +12,7 @@ class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
     super.key,
     this.titleSection,
-    this.titleColor,
-    this.controller,
+    required this.controller,
     this.keyboardType = TextInputType.text,
     this.placeholder,
     this.errorText,
@@ -43,10 +43,9 @@ class CustomTextFormField extends StatelessWidget {
   });
 
   final String? titleSection;
-  final Color? titleColor;
   final String? subtitleSection;
   final BoxConstraints? suffixIconConstraints;
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final TextInputType keyboardType;
   final String? defaultValue;
   final String? placeholder;
@@ -75,11 +74,8 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController effectiveController =
-        controller ?? TextEditingController();
-
-    if (defaultValue != null && effectiveController.text.isEmpty) {
-      effectiveController.text = defaultValue ?? "";
+    if (defaultValue != null) {
+      controller.text = defaultValue ?? "";
     }
 
     return Column(
@@ -88,37 +84,36 @@ class CustomTextFormField extends StatelessWidget {
         if (titleSection != null && titleSection!.isNotEmpty) ...[
           RichText(
             text: TextSpan(
-              style: xsRegular.copyWith(
-                color: titleColor ?? textDarkSecondary,
-              ),
+              style: xsRegular.copyWith(color: textDarkSecondary),
               children: [
                 TextSpan(text: titleSection!.replaceAll('*', '').trim()),
                 if (titleSection!.contains('*'))
-                  const TextSpan(
+                  TextSpan(
                     text: ' *',
                     style: TextStyle(color: textPrimary),
                   ),
               ],
             ),
           ),
-          const SizedBox(height: 11),
+          SizedBox(height: 11),
         ],
         if (subtitleSection != null && subtitleSection!.isNotEmpty) ...[
           Text(
             subtitleSection!,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
               color: black00,
             ),
           ),
-          const SizedBox(height: 11),
+          SizedBox(height: 11),
         ],
+
         TextFormField(
           readOnly: readOnly ?? false,
           onTap: onTap,
           textInputAction: textInputAction ?? TextInputAction.next,
-          controller: effectiveController,
+          controller: controller,
           focusNode: focusNode,
           keyboardType: keyboardType,
           obscureText: obsecureText ?? false,
@@ -132,6 +127,8 @@ class CustomTextFormField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: placeholder ?? '',
             hintStyle: xsRegular.copyWith(color: bgDisabled),
+
+            // Border styles
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
@@ -140,8 +137,8 @@ class CustomTextFormField extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: jacarta800, width: 2),
             ),
             errorBorder: OutlineInputBorder(
@@ -169,7 +166,7 @@ class CustomTextFormField extends StatelessWidget {
             ),
             prefix: prefix,
             prefixText: prefixText,
-            prefixStyle: const TextStyle(color: Colors.black87, fontSize: 14),
+            prefixStyle: TextStyle(color: Colors.black87, fontSize: 14),
             filled: true,
             fillColor: enabled == false ? Colors.grey.shade50 : Colors.white,
             errorText: errorText,
@@ -182,14 +179,16 @@ class CustomTextFormField extends StatelessWidget {
             return null;
           },
           onChanged: onChanged,
-          onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+          onTapOutside: (event) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
         ),
         if (helper != null || helperText != null) ...[
           const SizedBox(height: 6),
           if (helper != null) helper!,
           if (helperText != null)
-            const Text(
-              'helperText!',
+            Text(
+              helperText!,
               style: TextStyle(fontSize: 12, color: black00),
             ),
         ],

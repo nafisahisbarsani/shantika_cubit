@@ -108,9 +108,9 @@ abstract class ApiService {
     @Part() required String confirm_password,
   });
 
-  // @GET("/profile")
-  // Future<HttpResponse<ApiResponse<UserModel>>> profile();
-  //
+  @GET("/customer/membership")
+  Future<HttpResponse<ApiResponse<UserModel>>> profile();
+
   // /// Update Profile
   // @POST("/profile/update")
   // @MultiPart()
@@ -123,7 +123,7 @@ abstract class ApiService {
   //   @Part() String? phone,
   //   @Part() required String email,
   // });
-  //
+
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")
   // Future<HttpResponse<ApiResponse>> giveLike({

@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:shantika_cubit/features/authentication/login/cubit/login_phone_cubit.dart';
+import 'package:shantika_cubit/features/profile/cubit/profile_cubit.dart';
 import 'package:shantika_cubit/features/profile/profile_page.dart';
 import 'package:shantika_cubit/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SendToEmailCubit()),
         BlocProvider(create: (context) => ValidateResetTokenCubit()),
         BlocProvider(create: (context) => ChangePasswordCubit()),
+        BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => UpdateFcmTokenCubit()..init()),
       ],
       child: MaterialApp(
