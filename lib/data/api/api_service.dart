@@ -111,18 +111,19 @@ abstract class ApiService {
   @GET("/customer/membership")
   Future<HttpResponse<ApiResponse<UserModel>>> profile();
 
-  // /// Update Profile
-  // @POST("/profile/update")
-  // @MultiPart()
-  // Future<HttpResponse<ApiResponse<UserModel>>> updateProfile({
-  //   @Part() List<MultipartFile>? avatar,
-  //   @Part() required String first_name,
-  //   @Part() String? last_name,
-  //   @Part() String? birth_date,
-  //   @Part() required String gender,
-  //   @Part() String? phone,
-  //   @Part() required String email,
-  // });
+  /// Update Profile
+  @POST("/customer/update")
+  @MultiPart()
+  Future<HttpResponse<AuthResponse>> updateProfile({
+    @Part() List<MultipartFile>? avatar,
+    @Part() required String name,
+    @Part() String? birth,
+    @Part() String? birth_place,
+    @Part() required String gender,
+    @Part() String? phone,
+    @Part() required String email,
+    @Part() String? address,
+  });
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

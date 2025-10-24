@@ -314,6 +314,67 @@ class _ApiService implements ApiService {
     return httpResponse;
   }
 
+  @override
+  Future<HttpResponse<AuthResponse>> updateProfile({
+    List<MultipartFile>? avatar,
+    required String name,
+    String? birth,
+    String? birth_place,
+    required String gender,
+    String? phone,
+    required String email,
+    String? address,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    if (avatar != null) {
+      _data.files.addAll(avatar.map((i) => MapEntry('avatar', i)));
+    }
+    _data.fields.add(MapEntry('name', name));
+    if (birth != null) {
+      _data.fields.add(MapEntry('birth', birth));
+    }
+    if (birth_place != null) {
+      _data.fields.add(MapEntry('birth_place', birth_place));
+    }
+    _data.fields.add(MapEntry('gender', gender));
+    if (phone != null) {
+      _data.fields.add(MapEntry('phone', phone));
+    }
+    _data.fields.add(MapEntry('email', email));
+    if (address != null) {
+      _data.fields.add(MapEntry('address', address));
+    }
+    final _options = _setStreamType<HttpResponse<AuthResponse>>(
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
+          .compose(
+            _dio.options,
+            '/customer/update',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AuthResponse _value;
+    try {
+      _value = AuthResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
