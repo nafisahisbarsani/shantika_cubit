@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shantika_cubit/features/chat/chat_page.dart';
 import 'package:shantika_cubit/features/home/home_page.dart';
+import 'package:shantika_cubit/features/pesan/pesan_page.dart';
 import 'package:shantika_cubit/features/profile/profile_page.dart';
 
 import '../../ui/color.dart';
@@ -25,8 +27,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
   final List<Widget> screens = [
     HomePage(),
     // // AllBottomSheet(),
-    // AssignmentScreen(),
-    // TransactionScreen(),
+    ChatPage(),
+    PesanPage(),
     ProfilePage(),
   ];
 

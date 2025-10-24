@@ -2,37 +2,51 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shantika_cubit/features/personal_info/personal_info.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/shared_widget/custom_button.dart';
 import 'package:shantika_cubit/ui/typography.dart';
-
+import '../../model/user_model.dart';
 import 'cubit/logout_cubit.dart';
+import 'cubit/profile_cubit.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LogoutCubit()..init(),
-      child: BlocListener<LogoutCubit, LogoutState>(
-        listener: (context, state) {
-          if (state is LogoutStateSuccess) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/login',
-              (route) => false,
-            );
-          } else if (state is LogoutStateError) {
-            // Show error message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ProfileCubit()
+            ..init()
+            ..profile(),
+        ),
+        BlocProvider(
+          create: (context) => LogoutCubit()..init(),
+        ),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<LogoutCubit, LogoutState>(
+            listener: (context, state) {
+              if (state is LogoutStateSuccess) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/login',
+                      (route) => false,
+                );
+              } else if (state is LogoutStateError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           backgroundColor: black00,
           appBar: PreferredSize(
@@ -57,25 +71,55 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 24),
-                _buildPersonalData(),
-                SizedBox(height: 24),
-                _buildListProfile(context),
-                SizedBox(height: 24),
-                _buildButton(context),
-                SizedBox(height: 24),
-              ],
-            ),
+          body: BlocBuilder<ProfileCubit, ProfileState>(
+            builder: (context, state) {
+              if (state is ProfileStateLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              if (state is ProfileStateError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.message,
+                        textAlign: TextAlign.center,
+                        style: smMedium,
+                      ),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => context.read<ProfileCubit>().profile(),
+                        child: Text('Coba Lagi'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              final user = state is ProfileStateSuccess ? state.user : null;
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 24),
+                    _buildPersonalData(user),
+                    SizedBox(height: 24),
+                    _buildListProfile(context),
+                    SizedBox(height: 24),
+                    _buildButton(context),
+                    SizedBox(height: 24),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildPersonalData() {
+  Widget _buildPersonalData(UserModel? user) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Center(
@@ -84,13 +128,21 @@ class ProfilePage extends StatelessWidget {
             CircleAvatar(
               radius: 40,
               backgroundColor: black300,
-              child: Icon(Icons.person, size: 40, color: black00),
+              backgroundImage: user?.avatarUrl != null
+                  ? NetworkImage(user!.avatarUrl!)
+                  : null,
+              child: user?.avatarUrl == null
+                  ? Icon(Icons.person, size: 40, color: black00)
+                  : null,
             ),
             SizedBox(height: 12),
-            Text("Anastasya Carolina", style: mdMedium),
+            Text(
+              user?.name ?? "-",
+              style: mdMedium,
+            ),
             SizedBox(height: 4),
             Text(
-              "087374543899",
+              user?.phone ?? "-",
               style: smMedium.copyWith(color: textDarkTertiary),
             ),
           ],
@@ -104,7 +156,10 @@ class ProfilePage extends StatelessWidget {
       {
         'icon': "assets/images/profile.svg",
         'title': "Informasi Pribadi",
-        // 'route': '/informasi_pribadi',
+        'onTap': () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PersonalInfo()),
+        ),
       },
       {
         'icon': "assets/images/notif.svg",
@@ -121,9 +176,11 @@ class ProfilePage extends StatelessWidget {
       {
         'icon': "assets/images/list.svg",
         'title': "Syarat dan Ketentuan",
-        'route': '/syarat',
       },
-      {'icon': "assets/images/faq.svg", 'title': "FAQ", },
+      {
+        'icon': "assets/images/faq.svg",
+        'title': "FAQ",
+      },
       {
         'icon': "assets/images/fav.svg",
         'title': "Beri Nilai App Kami",
@@ -142,9 +199,7 @@ class ProfilePage extends StatelessWidget {
         itemBuilder: (context, index) {
           final item = menuItems[index];
           return GestureDetector(
-            onTap: () {
-              // Navigator.pushNamed(context, item['route']);
-            },
+            onTap: item['onTap'],
             child: Container(
               height: 56,
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -175,7 +230,6 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildButton(BuildContext context) {
     return BlocBuilder<LogoutCubit, LogoutState>(
       builder: (context, state) {
@@ -184,8 +238,22 @@ class ProfilePage extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: CustomButton(
-            onPressed: () {},
-            child: Text("Keluar", style: mdMedium.copyWith(color: black00)),
+            onPressed: isLoading
+                ? null
+                : () {
+              // Trigger logout
+              context.read<LogoutCubit>().logout();
+            },
+            child: isLoading
+                ? SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(black00),
+              ),
+            )
+                : Text("Keluar", style: mdMedium.copyWith(color: black00)),
             backgroundColor: bgFillDanger,
           ),
         );
