@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _addressController = TextEditingController();
   final _idTypeController = TextEditingController();
   final _idNumberController = TextEditingController();
-
+  final ValueNotifier<String> selectedGender = ValueNotifier('Pria');
   final _key = GlobalKey<FormState>();
   late RegisterCubit _registerCubit;
   final LoadingOverlay _overlay = LoadingOverlay();
@@ -72,24 +72,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocListener<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if (state is RegisterStateLoading) {
-            _overlay.show(context);
-          } else if (state is RegisterStateSuccess) {
-            _overlay.hide();
-
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NavigationScreen(),
-                ),
-                    (route) => false);
-          } else if (state is RegisterStateError) {
-            _overlay.hide();
-            context.showCustomToast(
-              position: SnackBarPosition.top,
-              title: "Oopss",
-              message: state.message,
-              isSuccess: false,
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => const Center(child: CircularProgressIndicator()),
             );
+          } else if (state is RegisterStateSuccess) {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => LoginScreen()),
+              (route) => false,
+            );
+          } else if (state is RegisterStateError) {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: SafeArea(
@@ -171,15 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   Text("Gender", style: smMedium),
                   SizedBox(height: space150),
-                  Row(
-                    children: [
-                      Expanded(child: _buildGenderOption("Male", Icons.male)),
-                      SizedBox(width: space300),
-                      Expanded(
-                        child: _buildGenderOption("Female", Icons.female),
-                      ),
-                    ],
-                  ),
+                  _buildGenderSelector(),
                   SizedBox(height: 15),
 
                   CustomTextFormField(
@@ -233,37 +224,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildGenderOption(String gender, IconData icon) {
-    final bool isSelected = _selectedGender == gender;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedGender = gender;
-        });
-      },
-      child: Container(
-        height: 48,
-        decoration: BoxDecoration(
-          color: isSelected ? jacarta800 : Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? jacarta800 : Colors.grey.shade300,
-          ),
+  Widget _buildGenderSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: space300),
+        ValueListenableBuilder(
+          valueListenable: selectedGender,
+          builder: (context, gender, _) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                color: shimmerHighlightColor,
+                borderRadius: BorderRadius.circular(borderRadius300),
+                border: Border.all(color: borderNeutralLight, width: 2),
+              ),
+              child: Row(
+                children: [
+                  _buildGenderOption('Pria', gender == 'Pria'),
+                  SizedBox(width: space800),
+                  _buildGenderOption('Wanita', gender == 'Wanita'),
+                ],
+              ),
+            );
+          },
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: isSelected ? Colors.white : jacarta800, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              gender,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black87,
-                fontWeight: FontWeight.w600,
+      ],
+    );
+  }
+
+  Widget _buildGenderOption(String label, bool isSelected) {
+    return GestureDetector(
+      onTap: () => selectedGender.value = label,
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isSelected ? textButtonSecondaryPressed : black500,
+            ),
+            child: Center(
+              child: Icon(
+                label == 'Pria' ? Icons.male : Icons.female,
+                size: 18,
+                color: Colors.white,
               ),
             ),
-          ],
-        ),
+          ),
+          SizedBox(width: space250),
+          Text(
+            label,
+            style: smMedium.copyWith(
+              color: isSelected ? textButtonSecondaryPressed : black500,
+            ),
+          ),
+        ],
       ),
     );
   }

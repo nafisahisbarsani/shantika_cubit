@@ -84,7 +84,7 @@ abstract class ApiService {
   // });
   //
   /// Logout
-  @POST("/logout")
+  @POST("/customer/logout")
   Future<HttpResponse<ApiResponse>> logout();
 
   /// Request Reset Password

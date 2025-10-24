@@ -84,11 +84,9 @@ class CustomTextFormField extends StatelessWidget {
         if (titleSection != null && titleSection!.isNotEmpty) ...[
           RichText(
             text: TextSpan(
-              style: xsRegular.copyWith(color: Colors.black87),
+              style: xsRegular.copyWith(color: textDarkSecondary),
               children: [
-                TextSpan(
-                  text: titleSection!.replaceAll('*', '').trim(),
-                ),
+                TextSpan(text: titleSection!.replaceAll('*', '').trim()),
                 if (titleSection!.contains('*'))
                   TextSpan(
                     text: ' *',
@@ -105,7 +103,7 @@ class CustomTextFormField extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Colors.grey.shade600,
+              color: black00,
             ),
           ),
           SizedBox(height: 11),
@@ -119,40 +117,33 @@ class CustomTextFormField extends StatelessWidget {
           focusNode: focusNode,
           keyboardType: keyboardType,
           obscureText: obsecureText ?? false,
-          style: TextStyle(
-            color: Colors.black87,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
+          style: xsRegular,
           enabled: enabled,
           maxLines: maxLines ?? 1,
           minLines: minLines,
           onFieldSubmitted: onSubmit,
           inputFormatters: inputFormatters,
+          cursorColor: jacarta800,
           decoration: InputDecoration(
             hintText: placeholder ?? '',
-            hintStyle: TextStyle(
-              color: Colors.grey.shade400,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
+            hintStyle: xsRegular.copyWith(color: bgDisabled),
 
             // Border styles
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: primaryColor, width: 2),
+              borderSide: BorderSide(color: jacarta800, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.red.shade400, width: 1),
+              borderSide: BorderSide(color: Colors.red.shade400, width: 2),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -160,7 +151,7 @@ class CustomTextFormField extends StatelessWidget {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
+              borderSide: BorderSide(color: Colors.grey.shade200, width: 2),
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 12,
@@ -169,20 +160,17 @@ class CustomTextFormField extends StatelessWidget {
             suffixIcon: suffixIcon,
             suffixIconConstraints: suffixIconConstraints,
             prefixIcon: prefixIcon,
-            prefixIconConstraints: const BoxConstraints(minHeight: 20, minWidth: 20),
+            prefixIconConstraints: const BoxConstraints(
+              minHeight: 20,
+              minWidth: 20,
+            ),
             prefix: prefix,
             prefixText: prefixText,
-            prefixStyle: TextStyle(
-              color: Colors.black87,
-              fontSize: 14,
-            ),
+            prefixStyle: TextStyle(color: Colors.black87, fontSize: 14),
             filled: true,
             fillColor: enabled == false ? Colors.grey.shade50 : Colors.white,
             errorText: errorText,
-            errorStyle: TextStyle(
-              fontSize: 12,
-              color: Colors.red.shade600,
-            ),
+            errorStyle: TextStyle(fontSize: 12, color: Colors.red.shade600),
           ),
           validator: (input) {
             if (validator != null) {
@@ -201,10 +189,7 @@ class CustomTextFormField extends StatelessWidget {
           if (helperText != null)
             Text(
               helperText!,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(fontSize: 12, color: black00),
             ),
         ],
       ],

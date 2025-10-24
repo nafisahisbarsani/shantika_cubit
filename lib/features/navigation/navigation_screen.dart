@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shantika_cubit/features/home/home_page.dart';
+import 'package:shantika_cubit/features/profile/profile_page.dart';
 
 import '../../ui/color.dart';
 import '../../ui/typography.dart';
@@ -18,7 +19,7 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  int _initialIndex = 0;
+  int _currentIndex = 0; // Changed from _initialIndex to _currentIndex
   late UpdateFcmTokenCubit _updateFcmTokenCubit;
 
   final List<Widget> screens = [
@@ -26,7 +27,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     // // AllBottomSheet(),
     // AssignmentScreen(),
     // TransactionScreen(),
-    // ProfileScreen(),
+    ProfilePage(),
   ];
 
   @override
@@ -36,7 +37,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     _updateFcmTokenCubit.updateFcmToken();
 
     if (widget.goToHistoryTransaction ?? false) {
-      _initialIndex = 2;
+      _currentIndex = 2; // Updated to use _currentIndex
     }
 
     super.initState();
@@ -45,51 +46,79 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[_initialIndex],
+      body: screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: bgLight,
         elevation: 1,
-        selectedLabelStyle: xxsRegular,
-        unselectedLabelStyle: xxsRegular,
-        iconSize: 25,
-        currentIndex: _initialIndex,
+        selectedLabelStyle: xsMedium.copyWith(color: jacarta800),
+        unselectedLabelStyle: xsMedium.copyWith(color: iconNeutralTertiary),
+        iconSize: 24,
+        currentIndex: _currentIndex,
         enableFeedback: false,
-        selectedItemColor: textPrimary,
-        unselectedItemColor: textDarkSecondary,
+        selectedItemColor: jacarta800,
+        unselectedItemColor: iconNeutralTertiary,
         onTap: (index) {
           setState(() {
-            _initialIndex = index;
+            _currentIndex = index;
           });
         },
         items: [
           BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/home.svg',
+              colorFilter: ColorFilter.mode(
+                iconNeutralTertiary,
+                BlendMode.srcIn,
+              ),
+            ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/home_active.svg',
+              colorFilter: ColorFilter.mode(jacarta800, BlendMode.srcIn),
+            ),
             label: 'Beranda',
-            icon: SvgPicture.asset(
-              'assets/images/ic_home_nav.svg',
-              color: _initialIndex == 0 ? iconPrimary : iconDarkSecondary,
-            ),
           ),
           BottomNavigationBarItem(
-            label: 'Penugasan',
             icon: SvgPicture.asset(
-              'assets/images/ic_briefcase_nav.svg',
-              color: _initialIndex == 1 ? iconPrimary : iconDarkSecondary,
+              'assets/images/chat.svg',
+              colorFilter: ColorFilter.mode(
+                iconNeutralTertiary,
+                BlendMode.srcIn,
+              ),
             ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/chat_active.svg',
+              colorFilter: ColorFilter.mode(jacarta800, BlendMode.srcIn),
+            ),
+            label: 'Chat',
           ),
           BottomNavigationBarItem(
-            label: 'Transaksi',
             icon: SvgPicture.asset(
-              'assets/images/ic_transaction_nav.svg',
-              color: _initialIndex == 2 ? iconPrimary : iconDarkSecondary,
+              'assets/images/ticket.svg',
+              colorFilter: ColorFilter.mode(
+                iconNeutralTertiary,
+                BlendMode.srcIn,
+              ),
             ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/ticket_active.svg',
+              colorFilter: ColorFilter.mode(jacarta800, BlendMode.srcIn),
+            ),
+            label: 'Pesan',
           ),
           BottomNavigationBarItem(
-            label: 'Profile',
             icon: SvgPicture.asset(
-              'assets/images/ic_profile.svg',
-              color: _initialIndex == 3 ? iconPrimary : iconDarkSecondary,
+              'assets/images/profile.svg',
+              colorFilter: ColorFilter.mode(
+                iconNeutralTertiary,
+                BlendMode.srcIn,
+              ),
             ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/profile_active.svg',
+              colorFilter: ColorFilter.mode(jacarta800, BlendMode.srcIn),
+            ),
+            label: 'Profil',
           ),
         ],
       ),
