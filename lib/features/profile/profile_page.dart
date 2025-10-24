@@ -105,7 +105,7 @@ class ProfilePage extends StatelessWidget {
                     SizedBox(height: 24),
                     _buildPersonalData(user),
                     SizedBox(height: 24),
-                    _buildListProfile(context),
+                    _buildListProfile(context, user),
                     SizedBox(height: 24),
                     _buildButton(context),
                     SizedBox(height: 24),
@@ -151,40 +151,53 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildListProfile(BuildContext context) {
+  Widget _buildListProfile(BuildContext context, UserModel? user) {
     final List<Map<String, dynamic>> menuItems = [
       {
         'icon': "assets/images/profile.svg",
         'title': "Informasi Pribadi",
-        'onTap': () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PersonalInfo()),
-        ),
+        'onTap': () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PersonalInfo(user: user),
+            ),
+          );
+          if (result == true) {
+            context.read<ProfileCubit>().profile();
+          }
+        },
       },
       {
         'icon': "assets/images/notif.svg",
         'title': "Notifikasi",
+        'onTap': () {},
       },
       {
         'icon': "assets/images/info.svg",
         'title': "Tentang Kami",
+        'onTap': () {},
       },
       {
         'icon': "assets/images/policy.svg",
         'title': "Kebijakan Privasi",
+        'onTap': () {},
       },
       {
         'icon': "assets/images/list.svg",
         'title': "Syarat dan Ketentuan",
+        'onTap': () {},
       },
       {
         'icon': "assets/images/faq.svg",
         'title': "FAQ",
+        'onTap': () {},
       },
       {
         'icon': "assets/images/fav.svg",
         'title': "Beri Nilai App Kami",
         'additionalText': "Versi 1.20.5",
+        'onTap': () {},
       },
     ];
 
@@ -229,8 +242,7 @@ class ProfilePage extends StatelessWidget {
         },
       ),
     );
-  }
-  Widget _buildButton(BuildContext context) {
+  }  Widget _buildButton(BuildContext context) {
     return BlocBuilder<LogoutCubit, LogoutState>(
       builder: (context, state) {
         final isLoading = state is LogoutStateLoading;

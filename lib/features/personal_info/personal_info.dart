@@ -1,29 +1,154 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/typography.dart';
+import '../../config/service_locator.dart';
+import '../../config/user_preference.dart';
+import '../../model/user_model.dart';
 import '../../ui/shared_widget/custom_arrow.dart';
 import '../../ui/shared_widget/custom_button.dart';
 import '../../ui/shared_widget/custom_text_form_field.dart';
+import '../profile/cubit/update_profile_cubit.dart';
 
-class PersonalInfo extends StatelessWidget {
-  PersonalInfo({super.key});
+class PersonalInfo extends StatefulWidget {
+  final UserModel? user;
+
+  const PersonalInfo({super.key, this.user});
+
+  @override
+  State<PersonalInfo> createState() => _PersonalInfoState();
+}
+
+class _PersonalInfoState extends State<PersonalInfo> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _birthPlaceController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   final ValueNotifier<String> selectedGender = ValueNotifier('Pria');
+
+  UserModel? currentUser;
+  bool _hasUpdated = false;
+  late UserPreference _preference;
+
+  @override
+  void initState() {
+    super.initState();
+    _preference = serviceLocator.get<UserPreference>();
+
+    final savedUser = _preference.getUser();
+    currentUser = savedUser ?? widget.user;
+
+    _loadUserData();
+  }
+
+  void _loadUserData() {
+    if (currentUser != null) {
+      _nameController.text = currentUser!.name ?? '';
+      _phoneController.text = currentUser!.phone ?? '';
+      _emailController.text = currentUser!.email ?? '';
+      _birthPlaceController.text = currentUser!.birthPlace ?? '';
+      _birthDateController.text = currentUser!.birth ?? '';
+      _addressController.text = currentUser!.address ?? '';
+
+      if (currentUser!.gender == 'Male') {
+        selectedGender.value = 'Pria';
+      } else if (currentUser!.gender == 'Female') {
+        selectedGender.value = 'Wanita';
+      } else {
+        selectedGender.value = 'Pria'; // default
+      }
+    }
+  }
+
+  void _updateUserData(UserModel newUser) {
+    setState(() {
+      currentUser = newUser;
+      _hasUpdated = true;
+    });
+
+    _nameController.text = newUser.name ?? '';
+    _phoneController.text = newUser.phone ?? '';
+    _emailController.text = newUser.email ?? '';
+    _birthPlaceController.text = newUser.birthPlace ?? '';
+    _birthDateController.text = newUser.birth ?? '';
+    _addressController.text = newUser.address ?? '';
+
+    // Update gender
+    if (newUser.gender == 'Male') {
+      selectedGender.value = 'Pria';
+    } else if (newUser.gender == 'Female') {
+      selectedGender.value = 'Wanita';
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _birthPlaceController.dispose();
+    _birthDateController.dispose();
+    _addressController.dispose();
+    selectedGender.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: black00,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildProfileHeader(),
-            _buildInput(context),
-            _buildButton()
-          ],
+    return BlocProvider(
+      create: (context) => UpdateProfileCubit()..init(),
+      child: BlocListener<UpdateProfileCubit, UpdateProfileState>(
+        listener: (context, state) {
+          if (state is UpdateProfileStateSuccess) {
+            _updateUserData(state.user);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Profil berhasil diperbarui'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+
+            Future.delayed(Duration(milliseconds: 500), () {
+              if (mounted) {
+                Navigator.pop(context, state.user);
+              }
+            });
+          } else if (state is UpdateProfileStateError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: WillPopScope(
+          onWillPop: () async {
+            if (_hasUpdated && currentUser != null) {
+              Navigator.pop(context, currentUser);
+              return false;
+            }
+            return true;
+          },
+          child: Scaffold(
+            backgroundColor: black00,
+            body: SingleChildScrollView(
+              padding: EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildProfileHeader(),
+                  _buildInput(context),
+                  _buildButton(context)
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -47,11 +172,7 @@ class PersonalInfo extends StatelessWidget {
 
   Widget _buildProfileHeader() {
     return Padding(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16
-      ),
+      padding: EdgeInsets.only(left: 16, right: 16, top: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -60,11 +181,16 @@ class PersonalInfo extends StatelessWidget {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: black300,
-                child: Icon(
-                  Icons.person,
-                  size: 40,
-                  color: Colors.black12,
-                ),
+                backgroundImage: currentUser?.avatarUrl != null &&
+                    currentUser!.avatarUrl!.isNotEmpty &&
+                    currentUser!.avatarUrl != 'https://sandbox.newshantika.co.id/storage'
+                    ? NetworkImage(currentUser!.avatarUrl!)
+                    : null,
+                child: currentUser?.avatarUrl == null ||
+                    currentUser!.avatarUrl!.isEmpty ||
+                    currentUser!.avatarUrl == 'https://sandbox.newshantika.co.id/storage'
+                    ? Icon(Icons.person, size: 40, color: Colors.black12)
+                    : null,
               ),
             ],
           ),
@@ -74,7 +200,7 @@ class PersonalInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Anastasya Carolina",
+                currentUser?.name ?? "User",
                 style: mdMedium,
               ),
               SizedBox(height: 6),
@@ -85,7 +211,7 @@ class PersonalInfo extends StatelessWidget {
                     style: smMedium.copyWith(color: textDarkTertiary),
                   ),
                   SizedBox(width: 4),
-                  Icon(Icons.check_circle, size: 14, color: black00),
+                  Icon(Icons.check_circle, size: 14, color: textDarkTertiary),
                 ],
               ),
             ],
@@ -95,30 +221,28 @@ class PersonalInfo extends StatelessWidget {
     );
   }
 
-  Widget _buildInput(BuildContext context) {  // Add context parameter
+  Widget _buildInput(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: 20,
-        left: 20,
-        right: 20,
-        bottom: 16,
-      ),
+      padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomTextFormField(
+            controller: _nameController,
             titleSection: 'Nama Lengkap',
             titleColor: black950,
             maxLines: 1,
           ),
           SizedBox(height: space400),
           CustomTextFormField(
+            controller: _phoneController,
             titleSection: 'Nomor Telepon',
             titleColor: black950,
             maxLines: 1,
           ),
           SizedBox(height: space400),
           CustomTextFormField(
+            controller: _emailController,
             titleSection: 'Email',
             titleColor: black950,
             maxLines: 1,
@@ -128,6 +252,7 @@ class PersonalInfo extends StatelessWidget {
             children: [
               Expanded(
                 child: CustomTextFormField(
+                  controller: _birthPlaceController,
                   titleColor: black950,
                   titleSection: 'Tempat Lahir',
                 ),
@@ -143,7 +268,8 @@ class PersonalInfo extends StatelessWidget {
                       lastDate: DateTime.now(),
                     );
                     if (date != null) {
-                      final formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                      final formattedDate =
+                          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
                       _birthDateController.text = formattedDate;
                     }
                   },
@@ -171,6 +297,7 @@ class PersonalInfo extends StatelessWidget {
           _buildGenderSelector(),
           SizedBox(height: space400),
           CustomTextFormField(
+            controller: _addressController,
             titleSection: 'Alamat',
             titleColor: black950,
             maxLines: 3,
@@ -180,21 +307,75 @@ class PersonalInfo extends StatelessWidget {
     );
   }
 
-  Widget _buildButton() {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 20,
-        left: 20,
-        right: 20,
-      ),
-      child: Center(
-        child: CustomButton(
-          onPressed: () {},
-          child: Text("Simpan"),
-        ),
-      ),
+  Widget _buildButton(BuildContext context) {
+    return BlocBuilder<UpdateProfileCubit, UpdateProfileState>(
+      builder: (context, state) {
+        final isLoading = state is UpdateProfileStateLoading;
+
+        return Padding(
+          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          child: Center(
+            child: CustomButton(
+              onPressed: isLoading
+                  ? null
+                  : () {
+                String genderValue = selectedGender.value;
+                if (genderValue == 'Pria') {
+                  genderValue = 'Male';
+                } else if (genderValue == 'Wanita') {
+                  genderValue = 'Female';
+                }
+
+                final emailToSend = _emailController.text.trim().isNotEmpty
+                    ? _emailController.text.trim()
+                    : (currentUser?.email ?? '');
+
+                final nameToSend = _nameController.text.trim().isNotEmpty
+                    ? _nameController.text.trim()
+                    : (currentUser?.name ?? 'User');
+
+                print('=== SUBMITTING UPDATE ===');
+                print('Name: $nameToSend');
+                print('Email: $emailToSend');
+                print('Gender: $genderValue');
+                print('Phone: ${_phoneController.text}');
+                print('========================');
+
+                context.read<UpdateProfileCubit>().updateProfile(
+                  name: nameToSend,
+                  email: emailToSend,
+                  gender: genderValue,
+                  phone: _phoneController.text.isNotEmpty
+                      ? _phoneController.text
+                      : null,
+                  birth: _birthDateController.text.isNotEmpty
+                      ? _birthDateController.text
+                      : null,
+                  birthPlace: _birthPlaceController.text.isNotEmpty
+                      ? _birthPlaceController.text
+                      : null,
+                  address: _addressController.text.isNotEmpty
+                      ? _addressController.text
+                      : null,
+                );
+              },
+              child: isLoading
+                  ? SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(black00),
+                ),
+              )
+                  : Text("Simpan"),
+            ),
+          ),
+        );
+      },
     );
   }
+
   Widget _buildGenderSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
