@@ -152,6 +152,7 @@ const Color iconLightPrimary = Color(0xFFFFFFFF);
 const Color iconLightSecondary = Color(0xFFE0E0E0);
 const Color iconLightDisabled = Color(0xFF9E9E9E);
 const Color iconNeutralSecondary = Color(0xFF71717A);
+const Color iconNeutralTertiary = Color(0xFF9E9E9E);
 const Color iconWhite = Color(0xFFFFFFFF);
 const Color iconDisabled = Color(0xFFa1a1aa);
 const Color iconPrimary = Color(0xFFED1515);

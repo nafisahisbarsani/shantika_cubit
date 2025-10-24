@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/typography.dart';
-import 'artikel_page.dart';
-import 'notification_page.dart';
+import '../article/artikel_page.dart';
+import '../notif/notification_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
