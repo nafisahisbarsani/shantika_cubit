@@ -11,11 +11,13 @@ class CustomButton extends StatelessWidget {
   final Color textColor;
   final Color textColorDisabled;
   final Size? maximumSize;
+  final Size? minimumSize;
   final Color backgroundColor;
   final Color disabledColor;
-  final Size? minimumSize;
   final Border? border;
   final double? width;
+  final double height;
+  final EdgeInsetsGeometry? padding;
 
   const CustomButton({
     Key? key,
@@ -31,36 +33,42 @@ class CustomButton extends StatelessWidget {
     this.border,
     this.disabledColor = bgDisabled,
     this.width,
+    this.height = 46,
+    this.padding,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final bool isEnabled = onPressed != null && !disabled;
+
     return Container(
-      height: 46,
       width: width,
+      height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(999),
         border: border,
+        gradient: isEnabled ? gradient : null,
       ),
       child: Material(
-        color: onPressed != null ? backgroundColor : disabledColor,
+        color: gradient == null
+            ? (isEnabled ? backgroundColor : disabledColor)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(borderRadius300),
         child: InkWell(
           splashColor: transparentColor,
           borderRadius: BorderRadius.circular(borderRadius300),
-          onTap: onPressed != null
+          onTap: isEnabled
               ? () {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  onPressed!();
-                }
+            FocusManager.instance.primaryFocus?.unfocus();
+            onPressed?.call();
+          }
               : null,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius300)),
-            ),
+          child: Padding(
+            padding: padding ?? EdgeInsets.zero,
             child: DefaultTextStyle.merge(
-              style: smMedium.copyWith(color: onPressed != null ? textColor : textColorDisabled),
+              style: smMedium.copyWith(
+                color: isEnabled ? textColor : textColorDisabled,
+              ),
               textAlign: TextAlign.center,
               child: Center(child: child),
             ),

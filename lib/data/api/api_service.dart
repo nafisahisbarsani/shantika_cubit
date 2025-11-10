@@ -1,9 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:shantika_cubit/model/response/about_us_response.dart';
 import '../../config/constant.dart';
+import '../../model/faq_model.dart';
+import '../../model/policy_model.dart';
 import '../../model/response/api_response.dart';
 import '../../model/response/auth_response.dart';
+import '../../model/response/faq_response.dart';
+import '../../model/response/privacy_policy_response.dart';
+import '../../model/response/terms_response.dart';
 import '../../model/user_model.dart';
 part 'api_service.g.dart';
 
@@ -29,9 +35,7 @@ abstract class ApiService {
 
   /// Login by Phone
   @POST("/customer/login/phone")
-  Future<HttpResponse<dynamic>> loginByPhone({
-    @Part() required String phone,
-  });
+  Future<HttpResponse<dynamic>> loginByPhone({@Part() required String phone});
 
   // @POST("/auth/register/google-apple")
   // Future<HttpResponse<ApiResponse<AuthResponse>>> registerWithGoogleOrApple({
@@ -69,11 +73,25 @@ abstract class ApiService {
   // });
 
   /// Update Fcm Token
-  @POST("/update-fcm-token")
+  @POST("/customer/update-fcm-token")
   Future<HttpResponse<ApiResponse>> updateFcmToken({
     @Part() required String fcm_token,
   });
-  //
+
+  /// FAQ
+  @GET("/faq")
+  Future<HttpResponse<FaqResponse>> faq();
+
+  /// Terms & Conditions
+  @GET("/term_and_condition")
+  Future<HttpResponse<TermsResponse>> terms();
+
+
+  /// Privacy Policy
+  @GET("/privacy_policy")
+  Future<HttpResponse<PrivacyPolicyResponse>> privacyPolicy();
+
+
   // // Contact Us
   // @POST("/information/contact-us")
   // Future<HttpResponse<ApiResponse>> contactUs({
@@ -83,6 +101,11 @@ abstract class ApiService {
   //   @Part() required String message,
   // });
   //
+
+  /// About Us
+  @GET("/about_us")
+  Future<HttpResponse<AboutUsResponse>> about();
+
   /// Logout
   @POST("/customer/logout")
   Future<HttpResponse<ApiResponse>> logout();

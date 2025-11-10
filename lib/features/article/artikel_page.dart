@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shantika_cubit/features/article/artikel_detail_page.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/shared_widget/custom_card.dart';
+import 'package:shantika_cubit/ui/shared_widget/custom_textfield.dart';
+import 'package:shantika_cubit/ui/typography.dart';
+
+import '../../ui/shared_widget/custom_arrow.dart';
 
 
 class ArtikelPage extends StatelessWidget {
@@ -15,7 +20,7 @@ class ArtikelPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // CustomArrow(title: "Artikel"),
+            CustomArrow(title: "Artikel"),
             _buildSearchBar(),
             _buildListArtikel(),
           ],
@@ -32,7 +37,7 @@ Widget _buildSearchBar() {
       right: 20,
       top: 12,
     ),
-    child: CustomCard(child: Column())
+    child: CustomTextfield(isIcon: true, icon: Icons.search, text: "Cari Artikel",)
   );
 }
 
@@ -47,11 +52,11 @@ Widget _buildListArtikel() {
       'image': 'assets/images/artikel_detail2.jpg',
     },
     {
-      'title': 'Pengalaman terbaik dalam perjalanan selama pandemi',
+      'title': 'Tips Aman Bepergian Bersama Keluarga',
       'image': 'assets/images/artikel_detail3.jpg',
     },
     {
-      'title': 'Pengalaman terbaik dalam perjalanan selama pandemi',
+      'title': 'Kenali Rute Perjalanan Favorit Penumpang',
       'image': 'assets/images/artikel_detail4.jpg',
     },
   ];
@@ -62,11 +67,16 @@ Widget _buildListArtikel() {
     itemCount: artikelList.length,
     itemBuilder: (context, index) {
       return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 8,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: CustomCard(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ArtikelDetailPage()),
+            );
+          },
+          borderRadius: BorderRadius.circular(borderRadius300),
+          borderSide: BorderSide(width: 1, color: borderNeutralLight),
           padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,8 +89,15 @@ Widget _buildListArtikel() {
                 child: Image.asset(
                   artikelList[index]['image']!,
                   width: double.infinity,
-                  height: 100,
+                  height: 160,
                   fit: BoxFit.cover,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  artikelList[index]['title']!,
+                  style: smRegular
                 ),
               ),
             ],

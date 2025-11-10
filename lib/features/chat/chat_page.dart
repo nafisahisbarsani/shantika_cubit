@@ -18,22 +18,13 @@ class ChatPage extends StatelessWidget {
           decoration: BoxDecoration(
             color: black00,
             boxShadow: [
-              BoxShadow(
-                color: black200,
-                offset: Offset(0, 2),
-                blurRadius: 4,
-              ),
+              BoxShadow(color: black200, offset: Offset(0, 2), blurRadius: 4),
             ],
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Center(
-              child: Text(
-                "Chat",
-                style: xlMedium,
-              ),
-            ),
+            title: Center(child: Text("Chat", style: xlMedium)),
           ),
         ),
       ),
@@ -74,10 +65,7 @@ class ChatPage extends StatelessWidget {
     ];
 
     return ListView.builder(
-      padding: const EdgeInsets.only(
-        top: spacing4,
-        bottom: spacing4,
-      ),
+      padding: const EdgeInsets.only(top: spacing4, bottom: spacing4),
       itemCount: chatItems.length,
       itemBuilder: (context, index) {
         final item = chatItems[index];
@@ -87,21 +75,23 @@ class ChatPage extends StatelessWidget {
             vertical: spacing3,
           ),
           child: CustomCard(
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  item.svgAsset,
-                  width: 35,
-                  height: 35,
-                ),
-                SizedBox(width: spacing4),
-                Expanded(
-                  child: Text(
-                    item.title,
-                    style: sRegular,
-                  ),
-                ),
-              ],
+            shadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+            borderRadius: BorderRadius.circular(borderRadius300),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  SvgPicture.asset(item.svgAsset, width: 35, height: 35),
+                  SizedBox(width: spacing4),
+                  Expanded(child: Text(item.title, style: sRegular)),
+                ],
+              ),
             ),
           ),
         );
