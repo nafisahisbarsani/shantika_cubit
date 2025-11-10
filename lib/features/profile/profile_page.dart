@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shantika_cubit/features/about_us/about_us_page.dart';
-import 'package:shantika_cubit/features/notif_profile/notification_set.dart';
 import 'package:shantika_cubit/features/personal_info/personal_info.dart';
 import 'package:shantika_cubit/features/privacy_policy/privacy_policy_page.dart';
 import 'package:shantika_cubit/features/terms_condition/term_condition_page.dart';
@@ -12,6 +11,7 @@ import 'package:shantika_cubit/ui/shared_widget/custom_button.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 import '../../model/user_model.dart';
 import '../faq/faq_page.dart';
+import '../notif_set/notification_set.dart';
 import 'cubit/logout_cubit.dart';
 import 'cubit/profile_cubit.dart';
 

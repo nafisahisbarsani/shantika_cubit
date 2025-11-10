@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/typography.dart';
@@ -52,10 +53,17 @@ class PolicyPage extends StatelessWidget {
                       style: sSemiBold,
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      parsedText,
-                      style: xsRegular.copyWith(color: textDarkSecondary),
-                      textAlign: TextAlign.justify,
+                    Html(
+                      data: data.content ?? "Tidak ada konten tersedia.",
+                      style: {
+                        "h1": Style.fromTextStyle(xsRegular),
+                        "h2": Style.fromTextStyle(sSemiBold),
+                        "p": Style.fromTextStyle(xsRegular),
+                        "li": Style.fromTextStyle(sRegular),
+                        "ul": Style(
+                          padding: HtmlPaddings.only(left: 20),
+                        ),
+                      },
                     ),
                     const SizedBox(height: 20),
                   ],

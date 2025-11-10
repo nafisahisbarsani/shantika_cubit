@@ -1,16 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:shantika_cubit/features/about_us/cubit/about_us_cubit.dart';
 import 'package:shantika_cubit/features/authentication/login/cubit/login_phone_cubit.dart';
-import 'package:shantika_cubit/features/notif_profile/cubit/notification_set_cubit.dart';
+import 'package:shantika_cubit/features/chat/cubit/chat_cubit.dart';
 import 'package:shantika_cubit/features/privacy_policy/cubit/privacy_policy_cubit.dart';
 import 'package:shantika_cubit/features/profile/cubit/profile_cubit.dart';
-import 'package:shantika_cubit/features/profile/profile_page.dart';
 import 'package:shantika_cubit/features/terms_condition/cubit/terms_conditions_cubit.dart';
-import 'package:shantika_cubit/repository/app_settings_repository.dart';
 import 'package:shantika_cubit/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shantika_cubit/ui/theme.dart';
@@ -23,6 +19,7 @@ import 'features/faq/cubit/faq_cubit.dart';
 import 'features/navigation/cubit/update_fcm_token_cubit.dart';
 import 'features/notif/cubit/notification_cubit.dart';
 import 'features/notif/cubit/read_notification_cubit.dart';
+import 'features/notif_set/cubit/notification_set_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -55,6 +52,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => TermsConditionsCubit()),
         BlocProvider(create: (context) => NotificationCubit()),
         BlocProvider(create: (context) => ReadNotificationCubit()),
+        BlocProvider(create: (context) => NotificationSetCubit()),
+        BlocProvider(create: (context) => ChatCubit()),
         BlocProvider(create: (context) => NotificationSetCubit()),
 
       ],
