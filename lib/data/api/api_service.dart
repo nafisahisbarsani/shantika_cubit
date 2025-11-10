@@ -8,6 +8,7 @@ import '../../model/policy_model.dart';
 import '../../model/response/api_response.dart';
 import '../../model/response/auth_response.dart';
 import '../../model/response/faq_response.dart';
+import '../../model/response/notification_response.dart';
 import '../../model/response/privacy_policy_response.dart';
 import '../../model/response/terms_response.dart';
 import '../../model/user_model.dart';
@@ -336,19 +337,19 @@ abstract class ApiService {
   //   @Part(name: "review") required String review,
   // });
   //
-  // /// NOTIFICATION
-  // @GET("/notification")
-  // Future<HttpResponse<ApiResponse<NotificationsResponse>>> notifications({
-  //   @Query("page") required int page,
-  // });
-  //
-  // /// NOTIFICATION READ
-  // @POST("/notification/see")
-  // Future<HttpResponse<ApiResponse>> readNotification({
-  //   @Part(name: "notification_id") required String id,
-  // });
-  //
-  // /// NOTIFICATION READ ALL
-  // @POST("/notification/see-all")
-  // Future<HttpResponse<ApiResponse>> readAllNotification();
+  /// NOTIFICATION
+  @GET("/notification")
+  Future<HttpResponse<ApiResponse<NotificationResponse>>> notifications({
+    @Query("page") required int page,
+  });
+
+  /// NOTIFICATION READ
+  @POST("/notification/read")
+  Future<HttpResponse<ApiResponse>> readNotification({
+    @Part(name: "notification_id") required String id,
+  });
+
+  /// NOTIFICATION READ ALL
+  @POST("/notification/read/all")
+  Future<HttpResponse<ApiResponse>> readAllNotification();
 }

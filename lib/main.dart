@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:shantika_cubit/features/about_us/cubit/about_us_cubit.dart';
 import 'package:shantika_cubit/features/authentication/login/cubit/login_phone_cubit.dart';
+import 'package:shantika_cubit/features/notif_profile/cubit/notification_set_cubit.dart';
 import 'package:shantika_cubit/features/privacy_policy/cubit/privacy_policy_cubit.dart';
 import 'package:shantika_cubit/features/profile/cubit/profile_cubit.dart';
 import 'package:shantika_cubit/features/profile/profile_page.dart';
@@ -20,6 +21,8 @@ import 'features/authentication/password/cubit/validate_reset_token_cubit.dart';
 import 'features/authentication/register/cubit/register_cubit.dart';
 import 'features/faq/cubit/faq_cubit.dart';
 import 'features/navigation/cubit/update_fcm_token_cubit.dart';
+import 'features/notif/cubit/notification_cubit.dart';
+import 'features/notif/cubit/read_notification_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -50,6 +53,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AboutUsCubit()),
         BlocProvider(create: (context) => PrivacyPolicyCubit()),
         BlocProvider(create: (context) => TermsConditionsCubit()),
+        BlocProvider(create: (context) => NotificationCubit()),
+        BlocProvider(create: (context) => ReadNotificationCubit()),
+        BlocProvider(create: (context) => NotificationSetCubit()),
 
       ],
       child: MaterialApp(

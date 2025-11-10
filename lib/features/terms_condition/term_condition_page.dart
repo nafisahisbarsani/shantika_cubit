@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart' as html_parser;
-
 import '../../../model/terms_model.dart';
 import '../../ui/color.dart';
 import '../../ui/shared_widget/custom_arrow.dart';
