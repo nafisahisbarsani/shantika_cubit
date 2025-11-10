@@ -3,12 +3,14 @@ import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:shantika_cubit/model/response/about_us_response.dart';
 import '../../config/constant.dart';
+import '../../model/chat_model.dart';
 import '../../model/faq_model.dart';
 import '../../model/policy_model.dart';
 import '../../model/response/api_response.dart';
 import '../../model/response/auth_response.dart';
 import '../../model/response/faq_response.dart';
 import '../../model/response/notification_response.dart';
+import '../../model/response/notification_set_response.dart';
 import '../../model/response/privacy_policy_response.dart';
 import '../../model/response/terms_response.dart';
 import '../../model/user_model.dart';
@@ -87,11 +89,9 @@ abstract class ApiService {
   @GET("/term_and_condition")
   Future<HttpResponse<TermsResponse>> terms();
 
-
   /// Privacy Policy
   @GET("/privacy_policy")
   Future<HttpResponse<PrivacyPolicyResponse>> privacyPolicy();
-
 
   // // Contact Us
   // @POST("/information/contact-us")
@@ -147,6 +147,18 @@ abstract class ApiService {
     @Part() String? phone,
     @Part() required String email,
     @Part() String? address,
+  });
+
+  /// Chat
+  @GET("/agen/chats")
+  Future<HttpResponse<ApiResponse<List<ChatModel>>>> fetchChats();
+
+  @GET("/notification_setting")
+  Future<HttpResponse<NotifSetResponse>> fetchSetting();
+
+  @POST("/notification_setting/update")
+  Future<HttpResponse<NotifSetResponse>> updateSetting({
+    @Body() required Map<String, dynamic> body,
   });
 
   // /// Memberi Laiks

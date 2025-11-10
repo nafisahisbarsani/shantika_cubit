@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:html/parser.dart' as html_parser;
+import 'package:flutter_html/flutter_html.dart';
 import '../../../model/terms_model.dart';
 import '../../ui/color.dart';
 import '../../ui/shared_widget/custom_arrow.dart';
@@ -38,11 +38,6 @@ class TermConditionPage extends StatelessWidget {
             } else if (state is TermsConditionStateData) {
               final TermsModel data = state.termsConditionModel;
 
-              // Parsing HTML content menjadi plain text
-              final document = html_parser.parse(data.content ?? "");
-              final String parsedText =
-                  document.body?.text.trim() ?? "Tidak ada konten tersedia.";
-
               body = SingleChildScrollView(
                 padding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -53,13 +48,19 @@ class TermConditionPage extends StatelessWidget {
                       data.name ?? "Syarat & Ketentuan",
                       style: sSemiBold,
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      parsedText,
-                      style: xsRegular.copyWith(color: textDarkSecondary),
-                      textAlign: TextAlign.justify,
+                    SizedBox(height: 16),
+                    Html(
+                      data: data.content ?? "Tidak ada konten tersedia.",
+                      style: {
+                        "h1": Style.fromTextStyle(xsRegular),
+                        "h2": Style.fromTextStyle(sSemiBold),
+                        "p": Style.fromTextStyle(xsRegular),
+                        "li": Style.fromTextStyle(sRegular),
+                        "ul": Style(
+                          padding: HtmlPaddings.only(left: 20),
+                        ),
+                      },
                     ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               );
@@ -91,7 +92,7 @@ class TermConditionPage extends StatelessWidget {
           ),
         ],
       ),
-      child: const CustomArrow(title: "Syarat & Ketentuan"),
+      child: const CustomArrow(title: "Kebijakan Privasi"),
     );
   }
 }
