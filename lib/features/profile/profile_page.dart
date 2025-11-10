@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shantika_cubit/features/about_us/about_us_page.dart';
 import 'package:shantika_cubit/features/personal_info/personal_info.dart';
+import 'package:shantika_cubit/features/privacy_policy/privacy_policy_page.dart';
+import 'package:shantika_cubit/features/terms_condition/term_condition_page.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/shared_widget/custom_button.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 import '../../model/user_model.dart';
+import '../faq/faq_page.dart';
 import 'cubit/logout_cubit.dart';
 import 'cubit/profile_cubit.dart';
 
@@ -22,9 +26,7 @@ class ProfilePage extends StatelessWidget {
             ..init()
             ..profile(),
         ),
-        BlocProvider(
-          create: (context) => LogoutCubit()..init(),
-        ),
+        BlocProvider(create: (context) => LogoutCubit()..init()),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -34,7 +36,7 @@ class ProfilePage extends StatelessWidget {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/login',
-                      (route) => false,
+                  (route) => false,
                 );
               } else if (state is LogoutStateError) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -136,10 +138,7 @@ class ProfilePage extends StatelessWidget {
                   : null,
             ),
             SizedBox(height: 12),
-            Text(
-              user?.name ?? "-",
-              style: mdMedium,
-            ),
+            Text(user?.name ?? "-", style: mdMedium),
             SizedBox(height: 4),
             Text(
               user?.phone ?? "-",
@@ -159,9 +158,7 @@ class ProfilePage extends StatelessWidget {
         'onTap': () async {
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => PersonalInfo(user: user),
-            ),
+            MaterialPageRoute(builder: (context) => PersonalInfo(user: user)),
           );
           if (result == true) {
             context.read<ProfileCubit>().profile();
@@ -176,22 +173,40 @@ class ProfilePage extends StatelessWidget {
       {
         'icon': "assets/images/info.svg",
         'title': "Tentang Kami",
-        'onTap': () {},
+        'onTap': () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AboutUsPage()),
+          );
+        },
       },
       {
         'icon': "assets/images/policy.svg",
         'title': "Kebijakan Privasi",
-        'onTap': () {},
-      },
+        'onTap': () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PolicyPage()),
+          );
+        },      },
       {
         'icon': "assets/images/list.svg",
         'title': "Syarat dan Ketentuan",
-        'onTap': () {},
-      },
+        'onTap': () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TermConditionPage()),
+          );
+        },      },
       {
         'icon': "assets/images/faq.svg",
         'title': "FAQ",
-        'onTap': () {},
+        'onTap': () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FaqPage()),
+          );
+        },
       },
       {
         'icon': "assets/images/fav.svg",
@@ -242,7 +257,9 @@ class ProfilePage extends StatelessWidget {
         },
       ),
     );
-  }  Widget _buildButton(BuildContext context) {
+  }
+
+  Widget _buildButton(BuildContext context) {
     return BlocBuilder<LogoutCubit, LogoutState>(
       builder: (context, state) {
         final isLoading = state is LogoutStateLoading;
@@ -253,18 +270,18 @@ class ProfilePage extends StatelessWidget {
             onPressed: isLoading
                 ? null
                 : () {
-              // Trigger logout
-              context.read<LogoutCubit>().logout();
-            },
+                    // Trigger logout
+                    context.read<LogoutCubit>().logout();
+                  },
             child: isLoading
                 ? SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(black00),
-              ),
-            )
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(black00),
+                    ),
+                  )
                 : Text("Keluar", style: mdMedium.copyWith(color: black00)),
             backgroundColor: bgFillDanger,
           ),

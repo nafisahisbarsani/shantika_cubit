@@ -3,6 +3,8 @@ import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/shared_widget/custom_card.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 
+import '../../ui/dimension.dart';
+
 class RiwayatPage extends StatelessWidget {
   const RiwayatPage({super.key});
 
@@ -23,20 +25,13 @@ PreferredSizeWidget _header() {
       decoration: BoxDecoration(
         color: black00,
         boxShadow: [
-          BoxShadow(
-            color: black200,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
+          BoxShadow(color: black100, blurRadius: 8, offset: Offset(0, 3)),
         ],
       ),
       child: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
-          "Riwayat",
-          style: xlRegular,
-        ),
+        title: Text("Riwayat", style: xlRegular),
         centerTitle: true,
         actions: [
           Padding(
@@ -60,7 +55,7 @@ Widget _buildHistoryView() {
       'destinationTime': '09:30',
       'price': 'Rp230.000',
       'status': 'Lunas',
-      'statusColor': green200,
+      'statusColor': bgFillSuccess,
     },
     {
       'bus': 'Bus 8 • Executive Medium',
@@ -71,7 +66,7 @@ Widget _buildHistoryView() {
       'destinationTime': '15:00',
       'price': 'Rp180.000',
       'status': 'Lunas',
-      'statusColor': green200,
+      'statusColor': bgFillSuccess,
     },
     {
       'bus': 'Bus 12 • Luxury Suite',
@@ -82,7 +77,7 @@ Widget _buildHistoryView() {
       'destinationTime': '12:30',
       'price': 'Rp350.000',
       'status': 'Lunas',
-      'statusColor': green200,
+      'statusColor': bgFillSuccess,
     },
     {
       'bus': 'Bus 8 • Executive Medium',
@@ -93,7 +88,7 @@ Widget _buildHistoryView() {
       'destinationTime': '15:00',
       'price': 'Rp180.000',
       'status': 'Lunas',
-      'statusColor': green200,
+      'statusColor': bgFillSuccess,
     },
   ];
 
@@ -104,7 +99,99 @@ Widget _buildHistoryView() {
       itemCount: orders.length,
       itemBuilder: (context, index) {
         final order = orders[index];
-        return CustomCard(child: Column());
+        return CustomCard(            borderSide: BorderSide(width: 1, color: black50),
+          borderRadius: BorderRadius.circular(borderRadius300),
+          padding: EdgeInsets.all(16),
+          margin: EdgeInsets.only(bottom: 10),
+          statusText: order['status'],
+          statusColor: order['statusColor'],
+          statusTextColor: order['statusTextColor'],
+          shadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [Text(order['bus'], style: smMedium)],
+                  ),
+                  Text(
+                    order['date'],
+                    style: xsRegular.copyWith(color: textDarkTertiary),
+                  ),
+                  SizedBox(height: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: iconDarkSecondary,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(order['origin'], style: xsMedium),
+                                Text(
+                                  order['originTime'],
+                                  style: xxsRegular.copyWith(
+                                    color: textDarkTertiary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: iconPrimary,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(order['destination'], style: xsMedium),
+                                Text(
+                                  order['destinationTime'],
+                                  style: xsRegular,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Text(
+                  order['price'],
+                  style: mdSemiBold.copyWith(color: textPrimary),
+                ),
+              ),
+            ],
+          ),);
       },
     ),
   );

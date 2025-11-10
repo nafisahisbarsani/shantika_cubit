@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart' as html_parser;
+import 'package:shantika_cubit/ui/color.dart';
+import 'package:shantika_cubit/ui/typography.dart';
+import 'package:shantika_cubit/ui/shared_widget/custom_arrow.dart';
+import '../../../model/policy_model.dart';
+import 'cubit/privacy_policy_cubit.dart';
 
-import '../../../model/terms_model.dart';
-import '../../ui/color.dart';
-import '../../ui/shared_widget/custom_arrow.dart';
-import '../../ui/typography.dart';
-import 'cubit/terms_conditions_cubit.dart';
-
-class TermConditionPage extends StatelessWidget {
-  const TermConditionPage({super.key});
+class PolicyPage extends StatelessWidget {
+  const PolicyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TermsConditionsCubit()
-        ..init()
-        ..termsConditions(),
+      create: (_) => PrivacyPolicyCubit()..init()..privacyPolicy(),
       child: Scaffold(
         backgroundColor: black00,
-        body: BlocBuilder<TermsConditionsCubit, TermsConditionsState>(
+        body: BlocBuilder<PrivacyPolicyCubit, PrivacyPolicyState>(
           builder: (context, state) {
             Widget body;
 
-            if (state is TermsConditionsLoading) {
-              body = const Center(child: CircularProgressIndicator());
-            } else if (state is TermsConditionsError) {
+            if (state is PrivacyPolicyLoading) {
+              body = const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is PrivacyPolicyError) {
               body = Center(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
@@ -36,22 +35,20 @@ class TermConditionPage extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (state is TermsConditionStateData) {
-              final TermsModel data = state.termsConditionModel;
+            } else if (state is PrivacyPolicyStateData) {
+              PrivacyPolicyModel data = state.privacyPolicyModel;
 
-              // Parsing HTML content menjadi plain text
               final document = html_parser.parse(data.content ?? "");
               final String parsedText =
                   document.body?.text.trim() ?? "Tidak ada konten tersedia.";
 
               body = SingleChildScrollView(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      data.name ?? "Syarat & Ketentuan",
+                      data.name ?? "Kebijakan Privasi",
                       style: sSemiBold,
                     ),
                     const SizedBox(height: 16),
@@ -92,7 +89,7 @@ class TermConditionPage extends StatelessWidget {
           ),
         ],
       ),
-      child: const CustomArrow(title: "Syarat & Ketentuan"),
+      child: const CustomArrow(title: "Kebijakan Privasi"),
     );
   }
 }

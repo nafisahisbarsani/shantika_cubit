@@ -1,48 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shantika_cubit/features/pesan/riwayat_page.dart';
+import 'package:shantika_cubit/ui/color.dart';
+import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/typography.dart';
-import '../../ui/color.dart';
+import '../../ui/shared_widget/custom_card.dart';
 
 class PesanPage extends StatelessWidget {
-   PesanPage({super.key});
+  const PesanPage({super.key});
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black00,
-      appBar: _header(),
-  //    body: _buildHistoryView(),
+      appBar: _header(context),
+      body: _buildHistoryView(),
     );
   }
 
-  PreferredSizeWidget _header() {
+  PreferredSizeWidget _header(BuildContext context) {
     return PreferredSize(
       preferredSize: Size.fromHeight(kToolbarHeight + 4),
       child: Container(
         decoration: BoxDecoration(
           color: black00,
           boxShadow: [
-            BoxShadow(
-              color:black200,
-              blurRadius: 8,
-              offset: Offset(0, 3),
-            ),
+            BoxShadow(color: black100, blurRadius: 8, offset: Offset(0, 3)),
           ],
         ),
         child: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: Text(
-            "Pesanan",
-            style: xlRegular,
-          ),
+          title: Text("Pesanan", style: xlMedium),
           centerTitle: true,
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.only(right: 16),
               child: IconButton(
                 icon: Icon(Icons.history_outlined, color: black400),
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RiwayatPage()),
+                  );
                 },
               ),
             ),
@@ -52,7 +53,8 @@ class PesanPage extends StatelessWidget {
     );
   }
 
-//  Widget _buildHistoryView() {
+
+  Widget _buildHistoryView() {
     final List<Map<String, dynamic>> orders = [
       {
         'bus': 'Bus 10 • Executive Big Top',
@@ -63,7 +65,7 @@ class PesanPage extends StatelessWidget {
         'destinationTime': '09:30',
         'price': 'Rp230.000',
         'status': 'Lunas',
-        'statusColor': green200,
+        'statusColor': bgFillSuccess,
       },
       {
         'bus': 'Bus 8 • Executive Medium',
@@ -74,7 +76,7 @@ class PesanPage extends StatelessWidget {
         'destinationTime': '15:00',
         'price': 'Rp180.000',
         'status': 'Sudah Ditukarkan',
-        'statusColor': blue500,
+        'statusColor': bgFillInfo,
       },
       {
         'bus': 'Bus 12 • Luxury Suite',
@@ -85,125 +87,114 @@ class PesanPage extends StatelessWidget {
         'destinationTime': '12:30',
         'price': 'Rp350.000',
         'status': 'Sudah Direview',
-        'statusColor': blue500,
+        'statusColor': navy900,
       },
     ];
 
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: 20),
-  //     child: ListView.builder(
-  //       padding: EdgeInsets.only(top: 16, bottom: 16),
-  //       itemCount: orders.length,
-  //       itemBuilder: (context, index) {
-  //         final order = orders[index];
-  //         return CustomCardContainer(
-  //           onTap:  () => Get.to(() => DetailPesanPage()),
-  //           padding: EdgeInsets.all(AppStyle.paddingM),
-  //           margin: EdgeInsets.only(bottom: AppStyle.spaceS),
-  //           borderColor: AppStyle.black200,
-  //           statusText: order['status'],
-  //           statusColor: order['statusColor'],
-  //           statusTextColor: order['statusTextColor'],
-  //           child: Stack(
-  //             children: [
-  //               Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                     children: [
-  //                       Text(
-  //                         order['bus'],
-  //                         style: AppStyle.bodySM2(color: AppStyle.black500),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   Text(
-  //                     order['date'],
-  //                     style: AppStyle.bodyXS2(color: AppStyle.black400),
-  //                   ),
-  //                   SizedBox(height: AppStyle.spaceS),
-  //                   Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       Row(
-  //                         children: [
-  //                           Icon(
-  //                             Icons.location_on,
-  //                             color: AppStyle.black400,
-  //                             size: 20,
-  //                           ),
-  //                           SizedBox(width: AppStyle.spaceS),
-  //                           Expanded(
-  //                             child: Column(
-  //                               crossAxisAlignment: CrossAxisAlignment.start,
-  //                               children: [
-  //                                 Text(
-  //                                   order['origin'],
-  //                                   style: AppStyle.bodyXS2(
-  //                                     color: AppStyle.black500,
-  //                                   ),
-  //                                 ),
-  //                                 Text(
-  //                                   order['originTime'],
-  //                                   style: AppStyle.bodyxxs2(
-  //                                     color: AppStyle.black400,
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                       SizedBox(height: AppStyle.spaceL),
-  //                       Row(
-  //                         children: [
-  //                           Icon(
-  //                             Icons.location_on,
-  //                             color: AppStyle.primary100,
-  //                             size: 20,
-  //                           ),
-  //                           SizedBox(width: AppStyle.spaceS),
-  //                           Expanded(
-  //                             child: Column(
-  //                               crossAxisAlignment: CrossAxisAlignment.start,
-  //                               children: [
-  //                                 Text(
-  //                                   order['destination'],
-  //                                   style: AppStyle.bodyXS2(
-  //                                     color: AppStyle.black500,
-  //                                   ),
-  //                                 ),
-  //                                 Text(
-  //                                   order['destinationTime'],
-  //                                   style: AppStyle.bodyxxs2(
-  //                                     color: AppStyle.black400,
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   SizedBox(height: AppStyle.spaceS),
-  //                 ],
-  //               ),
-  //               Positioned(
-  //                 right: 0,
-  //                 bottom: 0,
-  //                 child: Text(
-  //                   order['price'],
-  //                   style: AppStyle.bodyMD2(color: AppStyle.primary100),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: 12, bottom: 12),
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          final order = orders[index];
+          return CustomCard(
+            borderSide: BorderSide(width: 1, color: black50),
+            borderRadius: BorderRadius.circular(borderRadius300),
+            padding: EdgeInsets.all(16),
+            margin: EdgeInsets.only(bottom: 10),
+            statusText: order['status'],
+            statusColor: order['statusColor'],
+            statusTextColor: order['statusTextColor'],
+            shadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Text(order['bus'], style: smMedium)],
+                    ),
+                    Text(
+                      order['date'],
+                      style: xsRegular.copyWith(color: textDarkTertiary),
+                    ),
+                    SizedBox(height: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: iconDarkSecondary,
+                              size: 20,
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(order['origin'], style: xsMedium),
+                                  Text(
+                                    order['originTime'],
+                                    style: xxsRegular.copyWith(
+                                      color: textDarkTertiary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: iconPrimary,
+                              size: 20,
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(order['destination'], style: xsMedium),
+                                  Text(
+                                    order['destinationTime'],
+                                    style: xsRegular,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Text(
+                    order['price'],
+                    style: mdSemiBold.copyWith(color: textPrimary),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

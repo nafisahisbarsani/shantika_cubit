@@ -4,6 +4,8 @@ import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/shared_widget/custom_card.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 
+import '../../ui/shared_widget/custom_arrow.dart';
+
 
 class ArtikelDetailPage extends StatelessWidget {
   const ArtikelDetailPage({super.key});
@@ -16,6 +18,10 @@ class ArtikelDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            CustomArrow(
+              title: "Detail Artikel",
+              suffixIcon: Icon(Icons.share_outlined, size: 20),
+            ),
             _buildHeaderImage(),
             _buildArticleContent(),
             _buildTipsList(),
@@ -192,10 +198,10 @@ Widget _buildListArtikel() {
               children: [
                 Text(
                   "Selengkapnya",
-                  style:smRegular,
+                  style:smRegular.copyWith(color: textDanger),
                 ),
                 SizedBox(width: 2),
-                Icon(Icons.arrow_forward, size: 16, color: red700,)
+                Icon(Icons.arrow_forward, size: 16, color: textDanger,)
               ],
             ),
           ],
@@ -212,6 +218,8 @@ Widget _buildListArtikel() {
               vertical:8
             ),
             child: CustomCard(
+              borderRadius: BorderRadius.circular(borderRadius300),
+              borderSide: BorderSide(width: 1, color: borderNeutralLight),
               padding: EdgeInsets.zero,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
