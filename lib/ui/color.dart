@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 /// Base color
-const Color primaryColor = Color(0xFFED1515);
+const Color primaryColor = Color(0xFF0C44FF);
 const Color primaryColor700 = Color(0xFFC80D0D);
 const Color secondaryColor = Color(0xFFfd5812);
 const Color errorColor = Color(0xFFff4542);
@@ -199,7 +199,7 @@ const Color bgHoverSuccess = Color(0xFFDEF6D1);
 const Color bgHoverWarning = Color(0xFFFFF7C2);
 const Color bgHoverInfo = Color(0xFFD8F3FF);
 const Color bgFillNeutral = Color(0xFF71717A);
-const Color bgFillPrimary = Color(0xFFED1515);
+const Color bgFillPrimary = Color(0xFF0C44FF);
 const Color bgFillSecondary = Color(0xFFFF7B37);
 const Color bgFillDanger = Color(0xFFE83F3C);
 const Color bgFillSuccess = Color(0xFF8FC907);
@@ -275,6 +275,7 @@ const Color borderFormDefault = Color(0xFFE4E4E7);
 const Color borderFormDanger = Color(0xFFD64026);
 const Color borderSelectField = Color(0x14030712);
 const Color borderTable = Color(0xA0A0A0A);
+const Color notification = Color(0xFF9B9B9B);
 
 /// Jacarta
 const Color jacarta50 = Color(0xFFf0f0f9);

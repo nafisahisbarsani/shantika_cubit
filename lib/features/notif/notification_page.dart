@@ -1,43 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/typography.dart';
+import 'package:shantika_cubit/utility/extensions/date_time_extensions.dart';
+import 'package:with_space_between/with_space_between.dart';
+import '../../config/constant.dart';
+import '../../model/notification_model.dart';
+import '../../ui/dimension.dart';
+import '../../ui/shared_widget/common_appbar.dart';
+import '../../ui/shared_widget/custom_arrow.dart';
+import '../../ui/shared_widget/empty_state_view.dart';
+import '../../ui/shared_widget/error_view.dart';
+import 'cubit/notification_cubit.dart';
+import 'cubit/read_notification_cubit.dart';
 
 
 class NotificationPage extends StatelessWidget {
-  const NotificationPage({super.key});
+  NotificationPage({super.key});
+
+  late NotificationCubit _notificationCubit;
+  late ReadNotificationCubit _readNotificationCubit;
 
   @override
   Widget build(BuildContext context) {
+    _notificationCubit = context.read();
+    _notificationCubit.init();
+    _notificationCubit.notifications();
+
+    _readNotificationCubit = context.read();
+    _readNotificationCubit.init();
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: black00,
-        body: SafeArea(
+        appBar: const CommonAppbar(leading: true, title: "Notifikasi"),
+        body: BlocListener<ReadNotificationCubit, ReadNotificationState>(
+          listener: (context, state) {
+            if (state is ReadNotificationStateSuccess) {
+              _notificationCubit.notifications();
+            } else if (state is ReadAllNotificationStateSuccess) {
+              _notificationCubit.notifications();
+            }
+          },
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-           //   CustomArrow(title: "Notifikasi"),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: TabBar(
-                  indicatorColor: blue500,
-                  labelColor: blue100,
-                  unselectedLabelColor:black300,
-                  labelStyle: smRegular,
-                  tabs: const [
-                    Tab(text: "Semua 16"),
-                    Tab(text: "Belum Dibaca 7"),
-                  ],
-                ),
-              ),
-              SizedBox(height: 8),
+              _buildTabBar(context),
               Expanded(
                 child: TabBarView(
                   children: [
-                    _buildNotificationList(),
-                    _buildNotificationList(),
+                    _buildUnread(),
+                    _buildReaded(),
                   ],
                 ),
               ),
@@ -48,134 +61,213 @@ class NotificationPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationList() {
-    final List<Map<String, String>> notifications = [
-      {
-        'title': 'Promo Tiket Murah Mudik 2025',
-        'message':
-            'Yuk segera amankan tiket mudik mu sekarang juga sebelum kehabisan...',
-        'time': '10:00',
+  Widget _buildUnread() {
+    return RefreshIndicator(
+      onRefresh: () async {
+        _notificationCubit.setPage();
       },
-      {
-        'title': 'Tiket anda sudah dibayar lunas',
-        'message':
-            'Terimakasih sudah membeli tiket di new shantika nikmati perjalanannya.',
-        'time': '10:00',
-      },
-      {
-        'title': 'Segara Bayar Tiket yang sudah anda pesan',
-        'message': 'Bayar tiket anda dan nikmati perjalanan bus new shantika',
-        'time': '10:00',
-      },
-    ];
+      child: BlocBuilder<NotificationCubit, NotificationState>(
+        buildWhen: (prev, current) {
+          return current is NotificationStateLoading ||
+              current is NotificationStateError ||
+              current is NotificationStateSuccess;
+        },
+        builder: (context, state) {
+          if (state is NotificationStateSuccess) {
+            List<NotificationModel>? notifications = state.notifications.where((e) => e.isSeen == false).toList();
+            if (notifications.isEmpty) {
+              return EmptyStateView(
+                title: "Tidak ada notifikasi",
+                type: EmptyStateType.notification,
+                onPressed: () {
+                  _notificationCubit.notifications();
+                },
+              );
+            } else {
+              return NotificationListener<ScrollUpdateNotification>(
+                onNotification: (notification) {
+                  if (notification.metrics.maxScrollExtent == notification.metrics.pixels) {
+                    _notificationCubit.nextPage();
+                  }
+                  return false;
+                },
+                child: ListView.separated(
+                  padding: EdgeInsets.zero,
+                  itemCount: notifications.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    NotificationModel? data = notifications[index];
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "8 Februari 2024",
-                  style: smRegular,
+                    return _buildCustomNotification(
+                      isSeen: data.isSeen ?? false,
+                      icon: 'assets/images/ic_warning_notif.svg',
+                      title: data.title ?? "",
+                      time: data.createdAt?.convert(format: 'dd MMMM yyyy') ?? "",
+                      onTap: () {
+                        // _readNotificationCubit.readNotif(id: data.id ?? "");
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => DetailNotificationScreen(data: data),
+                        //   ),
+                        // );
+                      },
+                      description: data.message ?? "",
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(height: 0);
+                  },
                 ),
-                Text(
-                  "Baca Semua",
-                  style: smRegular,
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            ...notifications.map(
-              (notif) => _buildNotifItem(
-                title: notif['title']!,
-                message: notif['message']!,
-                time: notif['time']!,
+              );
+            }
+          } else if (state is NotificationStateError) {
+            return ErrorView(
+              title: "Oopss",
+              desc: state.message,
+              onReload: () {
+                _notificationCubit.notifications();
+              },
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildReaded() {
+    return BlocBuilder<NotificationCubit, NotificationState>(
+      builder: (context, state) {
+        if (state is NotificationStateSuccess) {
+          List<NotificationModel>? notifications = state.notifications.where((e) => e.isSeen == true).toList();
+          if (notifications.isEmpty) {
+            return EmptyStateView(title: "Tidak ada notifikasi", type: EmptyStateType.notification);
+          } else {
+            return ListView.separated(
+              padding: EdgeInsets.zero,
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                NotificationModel? data = notifications[index];
+
+                return _buildCustomNotification(
+                  isSeen: data.isSeen ?? false,
+                  icon: 'assets/images/ic_warning_notif.svg',
+                  title: data.title ?? "",
+                  time: data.createdAt?.convert(format: 'dd MMMM yyyy') ?? "",
+                  onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => DetailNotificationScreen(data: data),
+                    //   ),
+                    // );
+                  },
+                  description: data.message ?? "",
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(height: 0);
+              },
+            );
+          }
+        } else if (state is NotificationStateError) {
+          return ErrorView(
+            title: "Oopss",
+            desc: state.message,
+            onReload: () {
+              _notificationCubit.notifications();
+            },
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _buildCustomNotification({
+    required String icon,
+    required String title,
+    required String time,
+    required String description,
+    required VoidCallback onTap,
+    required bool isSeen,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        color: isSeen ? bg : bgSurfaceInfo,
+        padding:  EdgeInsets.symmetric(vertical: space200),
+        child: Padding(
+          padding:  EdgeInsets.symmetric(horizontal: space400),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: space150, vertical: space150),
+                        decoration:
+                        BoxDecoration(color: bgSurfaceInfo, borderRadius: BorderRadius.circular(borderRadius200)),
+                        child: SvgPicture.asset(icon),
+                      ),
+                      Text(
+                        title,
+                        style: smSemiBold.copyWith(color: textDarkPrimary),
+                      ),
+                    ].withSpaceBetween(width: space200),
+                  ),
+                  Text(
+                    time,
+                    style: xxsMedium.copyWith(color: textDarkPrimary),
+                  ),
+                ].withSpaceBetween(width: space200),
               ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "7 Februari 2024",
-                  style: smRegular),
-                Text(
-                  "Baca Semua",
-                  style: smRegular,
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            // ...notifications.map(
-            //   (notif) => _buildNotifItem(
-            //     title: notif['title']!,
-            //     message: notif['message']!,
-            //     time: notif['time']!,
-            //   ),
-            // ),
-            SizedBox(height: 14),
-          ],
+              Text(
+                description,
+                style: xsRegular.copyWith(color: textDarkSecondary),
+                textAlign: TextAlign.start,
+              ),
+            ].withSpaceBetween(height: space200),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildNotifItem({
-    required String title,
-    required String message,
-    required String time,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: 20,
-        horizontal: 12,
-      ),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: black200,
-            width: 1,
-          ),
+  TabBar _buildTabBar(BuildContext context) {
+    return TabBar(
+      padding: EdgeInsets.zero,
+      tabAlignment: TabAlignment.fill,
+      labelPadding: const EdgeInsets.symmetric(vertical: spacing5),
+      labelStyle: sSemiBold.copyWith(color: textPrimary),
+      unselectedLabelStyle: sSemiBold.copyWith(color: textDisabled),
+      dividerColor: Colors.transparent,
+      indicatorColor: bgFillPrimary,
+      indicatorPadding: const EdgeInsets.symmetric(horizontal: space400),
+      tabs: const [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Semua"),
+          ],
         ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Icon(
-          //   Bootstrap.ticket_perforated,
-          //   color: AppStyle.primary100,
-          //   size: AppStyle.iconM,
-          // ),
-          SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: xsRegular,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  message,
-                  style: xsMedium,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 8),
-          Text(
-            time,
-            style: xsMedium,
-          ),
-        ],
-      ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Belum Dibaca"),
+          ],
+        ),
+      ],
     );
   }
 }

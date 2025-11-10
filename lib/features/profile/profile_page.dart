@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shantika_cubit/features/about_us/about_us_page.dart';
+import 'package:shantika_cubit/features/notif_profile/notification_set.dart';
 import 'package:shantika_cubit/features/personal_info/personal_info.dart';
 import 'package:shantika_cubit/features/privacy_policy/privacy_policy_page.dart';
 import 'package:shantika_cubit/features/terms_condition/term_condition_page.dart';
@@ -168,8 +169,15 @@ class ProfilePage extends StatelessWidget {
       {
         'icon': "assets/images/notif.svg",
         'title': "Notifikasi",
-        'onTap': () {},
-      },
+        'onTap': () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationSet()),
+          );
+          if (result == true) {
+            context.read<ProfileCubit>().profile();
+          }
+        },      },
       {
         'icon': "assets/images/info.svg",
         'title': "Tentang Kami",

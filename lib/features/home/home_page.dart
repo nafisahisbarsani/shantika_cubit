@@ -11,6 +11,7 @@ import '../../ui/shared_widget/custom_button.dart';
 import '../../ui/shared_widget/custom_card.dart';
 import '../../ui/shared_widget/custom_section_divider.dart';
 import '../../ui/typography.dart';
+import '../notif/notification_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -70,8 +71,12 @@ class HomePage extends StatelessWidget {
           SizedBox(width: MediaQuery.of(context).size.width * 0.09),
           Image.asset('assets/images/logo_shantika.png'),
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.notifications, color: black00),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  NotificationPage()),
+              );
+            },            icon: Icon(Icons.notifications, color: black00),
           ),
         ],
       ),
@@ -563,15 +568,23 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomSectionDivider(text: "Testimoni"),
-              Text(
-                "Lihat Semua",
-                style:smMedium.copyWith(color: textPrimary),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ArtikelPage()),
+                  );
+                },
+                child: Text(
+                  "Lihat Semua",
+                  style: smSemiBold.copyWith(color: textPrimary),
+                ),
               ),
             ],
           ),
           SizedBox(height: 20,),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.30,
+            height: MediaQuery.of(context).size.height * 0.35,
             child: ListView.separated(
               itemCount: 3,
               scrollDirection: Axis.horizontal,
