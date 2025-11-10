@@ -15,7 +15,6 @@ import '../../ui/shared_widget/error_view.dart';
 import 'cubit/notification_cubit.dart';
 import 'cubit/read_notification_cubit.dart';
 
-
 class NotificationPage extends StatelessWidget {
   NotificationPage({super.key});
 
@@ -47,12 +46,7 @@ class NotificationPage extends StatelessWidget {
             children: [
               _buildTabBar(context),
               Expanded(
-                child: TabBarView(
-                  children: [
-                    _buildUnread(),
-                    _buildReaded(),
-                  ],
-                ),
+                child: TabBarView(children: [_buildReaded(), _buildUnread()]),
               ),
             ],
           ),
@@ -74,7 +68,9 @@ class NotificationPage extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is NotificationStateSuccess) {
-            List<NotificationModel>? notifications = state.notifications.where((e) => e.isSeen == false).toList();
+            List<NotificationModel> notifications = state.notifications
+                .where((e) => e.isSeen == false)
+                .toList();
             if (notifications.isEmpty) {
               return EmptyStateView(
                 title: "Tidak ada notifikasi",
@@ -86,7 +82,8 @@ class NotificationPage extends StatelessWidget {
             } else {
               return NotificationListener<ScrollUpdateNotification>(
                 onNotification: (notification) {
-                  if (notification.metrics.maxScrollExtent == notification.metrics.pixels) {
+                  if (notification.metrics.maxScrollExtent ==
+                      notification.metrics.pixels) {
                     _notificationCubit.nextPage();
                   }
                   return false;
@@ -102,7 +99,8 @@ class NotificationPage extends StatelessWidget {
                       isSeen: data.isSeen ?? false,
                       icon: 'assets/images/ic_warning_notif.svg',
                       title: data.title ?? "",
-                      time: data.createdAt?.convert(format: 'dd MMMM yyyy') ?? "",
+                      time:
+                          data.createdAt?.convert(format: 'dd MMMM yyyy') ?? "",
                       onTap: () {
                         // _readNotificationCubit.readNotif(id: data.id ?? "");
                         // Navigator.push(
@@ -141,9 +139,12 @@ class NotificationPage extends StatelessWidget {
     return BlocBuilder<NotificationCubit, NotificationState>(
       builder: (context, state) {
         if (state is NotificationStateSuccess) {
-          List<NotificationModel>? notifications = state.notifications.where((e) => e.isSeen == true).toList();
+          List<NotificationModel> notifications = state.notifications;
           if (notifications.isEmpty) {
-            return EmptyStateView(title: "Tidak ada notifikasi", type: EmptyStateType.notification);
+            return EmptyStateView(
+              title: "Tidak ada notifikasi",
+              type: EmptyStateType.notification,
+            );
           } else {
             return ListView.separated(
               padding: EdgeInsets.zero,
@@ -199,9 +200,9 @@ class NotificationPage extends StatelessWidget {
       onTap: onTap,
       child: Container(
         color: isSeen ? bg : bgSurfaceInfo,
-        padding:  EdgeInsets.symmetric(vertical: space200),
+        padding: EdgeInsets.symmetric(vertical: space200),
         child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: space400),
+          padding: EdgeInsets.symmetric(horizontal: space400),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -213,9 +214,14 @@ class NotificationPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: space150, vertical: space150),
-                        decoration:
-                        BoxDecoration(color: bgSurfaceInfo, borderRadius: BorderRadius.circular(borderRadius200)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: space150,
+                          vertical: space150,
+                        ),
+                        decoration: BoxDecoration(
+                          color: bgSurfaceInfo,
+                          borderRadius: BorderRadius.circular(borderRadius200),
+                        ),
                         child: SvgPicture.asset(icon),
                       ),
                       Text(
@@ -224,10 +230,7 @@ class NotificationPage extends StatelessWidget {
                       ),
                     ].withSpaceBetween(width: space200),
                   ),
-                  Text(
-                    time,
-                    style: xxsMedium.copyWith(color: textDarkPrimary),
-                  ),
+                  Text(time, style: xxsMedium.copyWith(color: textDarkPrimary)),
                 ].withSpaceBetween(width: space200),
               ),
               Text(
@@ -256,16 +259,12 @@ class NotificationPage extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Semua"),
-          ],
+          children: [Text("Semua")],
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Belum Dibaca"),
-          ],
+          children: [Text("Belum Dibaca")],
         ),
       ],
     );
