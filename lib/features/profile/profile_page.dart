@@ -123,6 +123,11 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _buildPersonalData(UserModel? user) {
+    final hasValidAvatar =
+        user?.avatarUrl != null &&
+        user!.avatarUrl!.isNotEmpty &&
+        user.avatarUrl != 'https://sandbox.newshantika.co.id/storage';
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Center(
@@ -131,10 +136,10 @@ class ProfilePage extends StatelessWidget {
             CircleAvatar(
               radius: 40,
               backgroundColor: black300,
-              backgroundImage: user?.avatarUrl != null
+              backgroundImage: hasValidAvatar
                   ? NetworkImage(user!.avatarUrl!)
                   : null,
-              child: user?.avatarUrl == null
+              child: !hasValidAvatar
                   ? Icon(Icons.person, size: 40, color: black00)
                   : null,
             ),
@@ -161,7 +166,8 @@ class ProfilePage extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => PersonalInfo(user: user)),
           );
-          if (result == true) {
+
+          if (result == true && context.mounted) {
             context.read<ProfileCubit>().profile();
           }
         },
@@ -174,10 +180,11 @@ class ProfilePage extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => NotificationSet()),
           );
-          if (result == true) {
+          if (result == true && context.mounted) {
             context.read<ProfileCubit>().profile();
           }
-        },      },
+        },
+      },
       {
         'icon': "assets/images/info.svg",
         'title': "Tentang Kami",
@@ -196,7 +203,8 @@ class ProfilePage extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => const PolicyPage()),
           );
-        },      },
+        },
+      },
       {
         'icon': "assets/images/list.svg",
         'title': "Syarat dan Ketentuan",
@@ -205,7 +213,8 @@ class ProfilePage extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => const TermConditionPage()),
           );
-        },      },
+        },
+      },
       {
         'icon': "assets/images/faq.svg",
         'title': "FAQ",
@@ -278,7 +287,6 @@ class ProfilePage extends StatelessWidget {
             onPressed: isLoading
                 ? null
                 : () {
-                    // Trigger logout
                     context.read<LogoutCubit>().logout();
                   },
             child: isLoading

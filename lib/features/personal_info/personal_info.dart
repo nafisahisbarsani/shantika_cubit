@@ -108,21 +108,20 @@ class _PersonalInfoState extends State<PersonalInfo> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Profil berhasil diperbarui'),
-                backgroundColor: Colors.green,
+                backgroundColor: successColor,
                 duration: Duration(seconds: 2),
               ),
             );
 
             Future.delayed(Duration(milliseconds: 500), () {
               if (mounted) {
-                Navigator.pop(context, state.user);
-              }
+                Navigator.pop(context, true);               }
             });
           } else if (state is UpdateProfileStateError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: errorColor,
               ),
             );
           }
