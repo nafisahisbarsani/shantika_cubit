@@ -5,7 +5,6 @@ import 'package:shantika_cubit/features/chat/chat_page.dart';
 import 'package:shantika_cubit/features/home/home_page.dart';
 import 'package:shantika_cubit/features/pesan/pesan_page.dart';
 import 'package:shantika_cubit/features/profile/profile_page.dart';
-
 import '../../ui/color.dart';
 import '../../ui/typography.dart';
 import 'cubit/update_fcm_token_cubit.dart';
@@ -21,7 +20,7 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  int _currentIndex = 0; // Changed from _initialIndex to _currentIndex
+  int _currentIndex = 0;
   late UpdateFcmTokenCubit _updateFcmTokenCubit;
 
   final List<Widget> screens = [
@@ -39,7 +38,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     _updateFcmTokenCubit.updateFcmToken();
 
     if (widget.goToHistoryTransaction ?? false) {
-      _currentIndex = 2; // Updated to use _currentIndex
+      _currentIndex = 2;
     }
 
     super.initState();

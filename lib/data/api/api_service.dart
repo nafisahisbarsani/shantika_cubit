@@ -4,8 +4,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:shantika_cubit/model/response/about_us_response.dart';
 import '../../config/constant.dart';
 import '../../model/chat_model.dart';
-import '../../model/faq_model.dart';
-import '../../model/policy_model.dart';
+import '../../model/home_model.dart';
 import '../../model/response/api_response.dart';
 import '../../model/response/auth_response.dart';
 import '../../model/response/faq_response.dart';
@@ -153,6 +152,7 @@ abstract class ApiService {
   @GET("/agen/chats")
   Future<HttpResponse<ApiResponse<List<ChatModel>>>> fetchChats();
 
+  /// Notif Setting
   @GET("/notification_setting")
   Future<HttpResponse<NotifSetResponse>> fetchSetting();
 
@@ -160,6 +160,10 @@ abstract class ApiService {
   Future<HttpResponse<NotifSetResponse>> updateSetting({
     @Body() required Map<String, dynamic> body,
   });
+
+  /// Home
+  @POST('/customer/home')
+  Future<HttpResponse<HomeModel>> home();  // ← Return HomeModel directly, not ApiResponse<HomeModel>
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

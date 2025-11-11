@@ -4,6 +4,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:shantika_cubit/features/about_us/cubit/about_us_cubit.dart';
 import 'package:shantika_cubit/features/authentication/login/cubit/login_phone_cubit.dart';
 import 'package:shantika_cubit/features/chat/cubit/chat_cubit.dart';
+import 'package:shantika_cubit/features/home/cubit/home_cubit.dart';
 import 'package:shantika_cubit/features/privacy_policy/cubit/privacy_policy_cubit.dart';
 import 'package:shantika_cubit/features/profile/cubit/profile_cubit.dart';
 import 'package:shantika_cubit/features/terms_condition/cubit/terms_conditions_cubit.dart';
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => NotificationSetCubit()),
         BlocProvider(create: (context) => ChatCubit()),
         BlocProvider(create: (context) => NotificationSetCubit()),
-
+        BlocProvider(create: (context) => HomeCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
