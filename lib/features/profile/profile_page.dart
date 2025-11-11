@@ -37,7 +37,7 @@ class ProfilePage extends StatelessWidget {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   '/login',
-                  (route) => false,
+                      (route) => false,
                 );
               } else if (state is LogoutStateError) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -77,7 +77,7 @@ class ProfilePage extends StatelessWidget {
           body: BlocBuilder<ProfileCubit, ProfileState>(
             builder: (context, state) {
               if (state is ProfileStateLoading) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
 
               if (state is ProfileStateError) {
@@ -90,10 +90,10 @@ class ProfilePage extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: smMedium,
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () => context.read<ProfileCubit>().profile(),
-                        child: Text('Coba Lagi'),
+                        child: const Text('Coba Lagi'),
                       ),
                     ],
                   ),
@@ -102,17 +102,24 @@ class ProfilePage extends StatelessWidget {
 
               final user = state is ProfileStateSuccess ? state.user : null;
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 24),
-                    _buildPersonalData(user),
-                    SizedBox(height: 24),
-                    _buildListProfile(context, user),
-                    SizedBox(height: 24),
-                    _buildButton(context),
-                    SizedBox(height: 24),
-                  ],
+              return RefreshIndicator(
+                color: primaryColor,
+                onRefresh: () async {
+                  await context.read<ProfileCubit>().profile();
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 24),
+                      _buildPersonalData(user),
+                      const SizedBox(height: 24),
+                      _buildListProfile(context, user),
+                      const SizedBox(height: 24),
+                      _buildButton(context),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               );
             },
@@ -125,11 +132,11 @@ class ProfilePage extends StatelessWidget {
   Widget _buildPersonalData(UserModel? user) {
     final hasValidAvatar =
         user?.avatarUrl != null &&
-        user!.avatarUrl!.isNotEmpty &&
-        user.avatarUrl != 'https://sandbox.newshantika.co.id/storage';
+            user!.avatarUrl!.isNotEmpty &&
+            user.avatarUrl != 'https://sandbox.newshantika.co.id/storage';
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Center(
         child: Column(
           children: [
@@ -143,9 +150,9 @@ class ProfilePage extends StatelessWidget {
                   ? Icon(Icons.person, size: 40, color: black00)
                   : null,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(user?.name ?? "-", style: mdMedium),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               user?.phone ?? "-",
               style: smMedium.copyWith(color: textDarkTertiary),
@@ -166,7 +173,6 @@ class ProfilePage extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => PersonalInfo(user: user)),
           );
-
           if (result == true && context.mounted) {
             context.read<ProfileCubit>().profile();
           }
@@ -234,20 +240,20 @@ class ProfilePage extends StatelessWidget {
     ];
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ListView.separated(
         padding: EdgeInsets.zero,
         itemCount: menuItems.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        separatorBuilder: (context, index) => SizedBox(height: 12),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final item = menuItems[index];
           return GestureDetector(
             onTap: item['onTap'],
             child: Container(
               height: 56,
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: bgSurfaceInfo,
                 borderRadius: BorderRadius.circular(12),
@@ -260,13 +266,13 @@ class ProfilePage extends StatelessWidget {
                     height: 24,
                     color: black950,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(child: Text(item['title'], style: smMedium)),
                   if (item['additionalText'] != null) ...[
                     Text(item['additionalText'], style: xxsMedium),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                   ],
-                  Icon(Icons.chevron_right, size: 24),
+                  const Icon(Icons.chevron_right, size: 24),
                 ],
               ),
             ),
@@ -282,22 +288,22 @@ class ProfilePage extends StatelessWidget {
         final isLoading = state is LogoutStateLoading;
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: CustomButton(
             onPressed: isLoading
                 ? null
                 : () {
-                    context.read<LogoutCubit>().logout();
-                  },
+              context.read<LogoutCubit>().logout();
+            },
             child: isLoading
-                ? SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(black00),
-                    ),
-                  )
+                ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
                 : Text("Keluar", style: mdMedium.copyWith(color: black00)),
             backgroundColor: bgFillDanger,
           ),

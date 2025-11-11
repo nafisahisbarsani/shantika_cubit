@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shantika_cubit/ui/color.dart';
+import 'package:shantika_cubit/ui/typography.dart';
 
 class CustomCarouselCard extends StatelessWidget {
   final String imagePath;
+  final bool isNetwork;
   final String title;
   final String subtitle;
   final double borderRadius;
@@ -17,6 +19,7 @@ class CustomCarouselCard extends StatelessWidget {
   const CustomCarouselCard({
     super.key,
     required this.imagePath,
+    this.isNetwork = false,
     required this.title,
     required this.subtitle,
     this.borderRadius = 12.0,
@@ -42,33 +45,51 @@ class CustomCarouselCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       height: height,
       width: width,
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: imageFit,
-        ),
       ),
-      child: Container(
-        padding: padding,
-        alignment: Alignment.bottomLeft,
-        child: Column(
-          mainAxisAlignment: contentAlignment,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: titleStyle,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          isNetwork
+              ? Image.network(
+            imagePath,
+            fit: imageFit,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                color: Colors.grey[300],
+                alignment: Alignment.center,
+                child: const Icon(Icons.broken_image, size: 40),
+              );
+            },
+          )
+              : Image.asset(
+            imagePath,
+            fit: imageFit,
+          ),
+          Container(
+            padding: padding,
+            alignment: Alignment.bottomLeft,
+            child: Column(
+              mainAxisAlignment: contentAlignment,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: smRegular,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: xsRegular,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: subtitleStyle,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
