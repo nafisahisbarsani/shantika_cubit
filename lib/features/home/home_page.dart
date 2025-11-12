@@ -14,6 +14,7 @@ import '../../ui/shared_widget/custom_card.dart';
 import '../../ui/shared_widget/custom_section_divider.dart';
 import '../../ui/typography.dart';
 import '../../utility/number_format.dart';
+import '../article/artikel_detail_page.dart';
 import '../notif/notification_page.dart';
 import 'cubit/home_cubit.dart';
 
@@ -673,11 +674,18 @@ Widget _buildArticleView(BuildContext context, HomeModel homeData) {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final article = articles[index];
-
               print('📄 Article: ${article.name} - Image: ${article.image}');
-
               return CustomCard(
-                color: black00,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ArtikelDetailPage(
+                        id: article.id.toString(),
+                      ),
+                    ),
+                  );
+                },                color: black00,
                 margin: EdgeInsets.only(right: 10),
                 padding: EdgeInsets.all(8),
                 child: Column(

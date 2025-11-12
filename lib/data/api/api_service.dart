@@ -6,6 +6,7 @@ import '../../config/constant.dart';
 import '../../model/chat_model.dart';
 import '../../model/home_model.dart';
 import '../../model/response/api_response.dart';
+import '../../model/response/article_detail_response.dart';
 import '../../model/response/auth_response.dart';
 import '../../model/response/faq_response.dart';
 import '../../model/response/notification_response.dart';
@@ -164,6 +165,13 @@ abstract class ApiService {
   /// Home
   @POST('/customer/home')
   Future<HttpResponse<HomeModel>> home();
+
+  /// Article Detail
+  @GET("/article_detail/{id}")
+  Future<HttpResponse<ArticleDetailResponse>> detailArticle({
+    @Path("id") required String id,
+  });
+
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

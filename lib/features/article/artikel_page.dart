@@ -70,10 +70,10 @@ Widget _buildListArtikel() {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: CustomCard(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ArtikelDetailPage()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const ArtikelDetailPage(id: article.id.toString()),
+            // );
           },
           borderRadius: BorderRadius.circular(borderRadius300),
           borderSide: BorderSide(width: 1, color: borderNeutralLight),
