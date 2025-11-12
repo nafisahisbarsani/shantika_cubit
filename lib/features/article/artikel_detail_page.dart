@@ -3,9 +3,7 @@ import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/shared_widget/custom_card.dart';
 import 'package:shantika_cubit/ui/typography.dart';
-
 import '../../ui/shared_widget/custom_arrow.dart';
-
 
 class ArtikelDetailPage extends StatelessWidget {
   const ArtikelDetailPage({super.key});
@@ -54,11 +52,7 @@ Widget _buildHeaderImage() {
 
 Widget _buildArticleContent() {
   return Padding(
-    padding: const EdgeInsets.only(
-      left: 20,
-      right: 20,
-      top: 10,
-    ),
+    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
     child: Column(
       children: [
         Text(
@@ -133,26 +127,15 @@ Widget _buildTipItem({
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 4.0, bottom: 6),
-          child: Text(
-            "$number $title",
-            style: smRegular,
-          ),
+          child: Text("$number $title", style: smRegular),
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Image.asset(
-            image,
-            width: 150,
-            height: 116,
-            fit: BoxFit.cover,
-          ),
+          child: Image.asset(image, width: 150, height: 116, fit: BoxFit.cover),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 6.0),
-          child: Text(
-            description,
-            style: xsRegular,
-          ),
+          child: Text(description, style: xsRegular),
         ),
       ],
     ),
@@ -183,25 +166,19 @@ Widget _buildListArtikel() {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-        ),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Baca Artikel Lainnya",
-              style: smSemiBold,
-            ),
+            Text("Baca Artikel Lainnya", style: smSemiBold),
             Row(
               children: [
                 Text(
                   "Selengkapnya",
-                  style:smRegular.copyWith(color: textDanger),
+                  style: smRegular.copyWith(color: textDanger),
                 ),
                 SizedBox(width: 2),
-                Icon(Icons.arrow_forward, size: 16, color: textDanger,)
+                Icon(Icons.arrow_forward, size: 16, color: textDanger),
               ],
             ),
           ],
@@ -213,10 +190,7 @@ Widget _buildListArtikel() {
         itemCount: artikelList.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical:8
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: CustomCard(
               borderRadius: BorderRadius.circular(borderRadius300),
               borderSide: BorderSide(width: 1, color: borderNeutralLight),

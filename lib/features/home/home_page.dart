@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconly/iconly.dart';
-import 'package:path/path.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
-
+import 'package:intl/intl.dart';
 import '../../model/home_model.dart';
 import '../../ui/color.dart';
 import '../../ui/dimension.dart';
@@ -14,6 +13,7 @@ import '../../ui/shared_widget/custom_button.dart';
 import '../../ui/shared_widget/custom_card.dart';
 import '../../ui/shared_widget/custom_section_divider.dart';
 import '../../ui/typography.dart';
+import '../../utility/number_format.dart';
 import '../notif/notification_page.dart';
 import 'cubit/home_cubit.dart';
 
@@ -57,12 +57,14 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 20),
                         _buildCarouselView(homeData),
                         const SizedBox(height: 20),
-                        _buildMenuView(homeData), // ← Pass homeData!
+                        _buildMenuView(homeData),
                         _buildHowYourTrip(),
-                        _buildHistoryView(homeData), // ← Pass homeData!
+                        _buildHistoryView(homeData),
                         _buildPromoView(homeData),
                         _buildArticleView(context, homeData),
                         _buildTestimoniView(context, homeData),
+                        const SizedBox(height: 20),
+
                       ],
                     ),
                   ],
@@ -379,21 +381,18 @@ Widget _buildHowYourTrip() {
 Widget _buildHistoryView(HomeModel homeData) {
   final reviews = homeData.pendingReviews ?? [];
 
-  print('📜 History - Pending reviews: ${reviews.length}');
+  final dateFormatter = DateFormat('dd MMMM yyyy', 'id_ID');
 
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Column(
       children: [
-        // Section divider always visible
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const CustomSectionDivider(text: "Riwayat"),
             TextButton(
-              onPressed: () {
-                // Navigate to full history page
-              },
+              onPressed: () {},
               child: Text(
                 "Lihat Semua",
                 style: smSemiBold.copyWith(color: textPrimary),
@@ -405,146 +404,139 @@ Widget _buildHistoryView(HomeModel homeData) {
         reviews.isEmpty
             ? Text("Tidak ada riwayat saat ini", style: smRegular)
             : SizedBox(
-          height: 220, // adjust based on card height
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: reviews.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              final review = reviews[index];
-
-              return CustomCard(
-                width: 300,
-                borderRadius: BorderRadius.circular(borderRadius300),
-                color: black00,
-                padding: const EdgeInsets.only(
-                    top: 16, left: 20, right: 20, bottom: 16),
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "${review.nameFleet ?? 'Bus'} • ${review.fleetClass ?? 'Class'}",
-                                style: smMedium,
-                                overflow: TextOverflow.ellipsis,
+                height: 190,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: reviews.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  itemBuilder: (context, index) {
+                    final review = reviews[index];
+                    final date = review.createdAt != null
+                        ? dateFormatter.format(
+                            DateTime.parse(review.createdAt!),
+                          )
+                        : '';
+                    return CustomCard(
+                      width: 325,
+                      borderRadius: BorderRadius.circular(borderRadius300),
+                      borderSide: BorderSide(width: 2, color: black50),
+                      color: black00,
+                      padding: const EdgeInsets.all(16),
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "${review.nameFleet ?? 'Bus'} • ${review.fleetClass ?? 'Class'}",
+                                      style: smMedium,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  CustomButton(
+                                    width: 89,
+                                    height: 22,
+                                    onPressed: () {},
+                                    child: Text(
+                                      "Beri Review",
+                                      style: xsMedium.copyWith(color: black00),
+                                    ),
+                                    backgroundColor: textPrimaryPressed,
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            CustomButton(
-                              width: 89,
-                              height: 22,
-                              onPressed: () {
-                                // Handle review action
-                              },
-                              child: Text(
-                                "Beri Review",
-                                style:
-                                xsMedium.copyWith(color: black00),
-                              ),
-                              backgroundColor: textPrimaryPressed,
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "${review.createdAt ?? ''} • ${review.departureAt ?? ''}",
-                          style: xsRegular.copyWith(
-                              color: textDarkTertiary),
-                        ),
-                        const SizedBox(height: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // START LOCATION
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: iconDarkSecondary,
-                                  size: 20,
+                              const SizedBox(height: 4),
+                              Text(
+                                "${date} • ${review.departureAt ?? ''}",
+                                style: xsRegular.copyWith(
+                                  color: textDarkTertiary,
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
+                              ),
+                              const SizedBox(height: 12),
+                              Column(
+                                children: [
+                                  Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        review.checkpoints?.start
-                                            ?.agencyName ??
-                                            "Starting Point",
-                                        style: xsMedium,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                      Column(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on,
+                                            color: iconDarkSecondary,
+                                            size: 20,
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        review.departureAt ?? "",
-                                        style: xxsRegular.copyWith(
-                                          color: textDarkTertiary,
-                                        ),
+                                      const SizedBox(width: 12),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${review.checkpoints?.start?.agencyName ?? ''} - ${review.checkpoints?.start?.cityName ?? ''}",
+                                            style: xsMedium,
+                                          ),
+                                          Text(
+                                            review.departureAt ?? '',
+                                            style: xxsRegular.copyWith(
+                                              color: textDarkTertiary,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            // DESTINATION LOCATION
-                            Row(
-                              children: [
-                                Icon(Icons.location_on,
-                                    color: iconPrimary, size: 20),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                  const SizedBox(height: 12),
+                                  Row(
                                     children: [
-                                      Text(
-                                        review.checkpoints?.destination
-                                            ?.agencyName ??
-                                            "Destination",
-                                        style: xsMedium,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                      Icon(
+                                        Icons.location_on,
+                                        color: iconPrimary,
+                                        size: 20,
                                       ),
-                                      Text(
-                                        review.checkpoints?.destination
-                                            ?.cityName ??
-                                            "",
-                                        style: xxsRegular.copyWith(
-                                          color: textDarkTertiary,
-                                        ),
+                                      const SizedBox(width: 12),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${review.checkpoints?.destination?.agencyName ?? ''} - ${review.checkpoints?.destination?.cityName ?? ''}",
+                                            style: xsMedium,
+                                          ),
+                                          Text(
+                                            review.departureAt ?? '',
+                                            style: xxsRegular.copyWith(
+                                              color: textDarkTertiary,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Text(
+                              NumberFormatter.rupiah(review.price),
+                              style: mdSemiBold.copyWith(color: textPrimary),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: Text(
-                        "Rp${review.price?.toString() ?? '0'}",
-                        style: mdSemiBold.copyWith(color: textPrimary),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
+              ),
       ],
     ),
   );
@@ -569,7 +561,8 @@ Widget _buildPromoView(HomeModel homeData) {
                 "Lihat Semua",
                 style: smSemiBold.copyWith(color: textPrimary),
               ),
-            ),          ],
+            ),
+          ],
         ),
         SizedBox(height: 20),
         promos.isEmpty
@@ -652,7 +645,7 @@ Widget _buildArticleView(BuildContext context, HomeModel homeData) {
   }
 
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20),
+    padding: EdgeInsets.only( right: 20, left: 20),
     child: Column(
       children: [
         Row(
@@ -741,10 +734,9 @@ Widget _buildTestimoniView(BuildContext context, HomeModel homeData) {
   print('💬 Testimonials - Total: ${testimonials.length}');
 
   return Padding(
-    padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
     child: Column(
       children: [
-        // Always show the section divider and "Lihat Semua"
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -766,7 +758,6 @@ Widget _buildTestimoniView(BuildContext context, HomeModel homeData) {
           ],
         ),
         const SizedBox(height: 20),
-        // Show placeholder if no testimonials
         testimonials.isEmpty
             ? Text("Tidak ada testimoni saat ini", style: smRegular)
             : SizedBox(

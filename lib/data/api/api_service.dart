@@ -163,7 +163,7 @@ abstract class ApiService {
 
   /// Home
   @POST('/customer/home')
-  Future<HttpResponse<HomeModel>> home();  // ← Return HomeModel directly, not ApiResponse<HomeModel>
+  Future<HttpResponse<HomeModel>> home();
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

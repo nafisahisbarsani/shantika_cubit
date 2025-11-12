@@ -10,7 +10,7 @@ class HomeModel {
   final List<SliderModel>? slider;
   final List<ArtikelModel>? artikel;
 
-  @JsonKey(name: 'customer_menu')  // ← THIS IS CRITICAL!
+  @JsonKey(name: 'customer_menu')
   final List<CustomerMenuModel>? customerMenu;
 
   final List<dynamic>? testimonial;
@@ -61,17 +61,12 @@ class HomeModel {
 @JsonSerializable()
 class SliderModel {
   final int? id;
-
-  // API returns "name", not "title"
   final String? name;
-
   final String? image;
   final String? description;
   final String? type;
-
   @JsonKey(name: 'created_at')
   final String? createdAt;
-
   @JsonKey(name: 'updated_at')
   final String? updatedAt;
 
@@ -93,18 +88,11 @@ class SliderModel {
 @JsonSerializable()
 class ArtikelModel {
   final int? id;
-
-  // API returns "name", not "title"
   final String? name;
-
   final String? image;
-
-  // API returns "description", not "content"
   final String? description;
-
   @JsonKey(name: 'created_at')
   final String? createdAt;
-
   @JsonKey(name: 'updated_at')
   final String? updatedAt;
 
@@ -125,23 +113,14 @@ class ArtikelModel {
 @JsonSerializable()
 class CustomerMenuModel {
   final int? id;
-
-  // API returns "name", not "title"
   final String? name;
-
   final String? icon;
-
   @JsonKey(name: 'created_at')
   final String? createdAt;
-
   @JsonKey(name: 'updated_at')
   final String? updatedAt;
-
   final int? order;
-
-  // API returns "value", not "link"
   final String? value;
-
   final String? type;
 
   CustomerMenuModel({
@@ -163,22 +142,16 @@ class CustomerMenuModel {
 @JsonSerializable(explicitToJson: true)
 class PendingReviewModel {
   final int? id;
-
   @JsonKey(name: 'code_order')
   final String? codeOrder;
-
   @JsonKey(name: 'name_fleet')
   final String? nameFleet;
-
   @JsonKey(name: 'fleet_class')
   final String? fleetClass;
-
   @JsonKey(name: 'created_at')
   final String? createdAt;
-
   @JsonKey(name: 'departure_at')
   final String? departureAt;
-
   final int? price;
   final String? status;
   final CheckpointsModel? checkpoints;
@@ -206,11 +179,7 @@ class CheckpointsModel {
   final AgencyModel? destination;
   final AgencyModel? end;
 
-  CheckpointsModel({
-    this.start,
-    this.destination,
-    this.end,
-  });
+  CheckpointsModel({this.start, this.destination, this.end});
 
   factory CheckpointsModel.fromJson(Map<String, dynamic> json) =>
       _$CheckpointsModelFromJson(json);
