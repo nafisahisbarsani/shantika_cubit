@@ -8,14 +8,15 @@ import 'package:shantika_cubit/ui/typography.dart';
 import '../../features/chat/cubit/chat_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ChatCubit()..init()..fetchChats(),
+      create: (_) => ChatCubit()
+        ..init()
+        ..fetchChats(),
       child: Scaffold(
         backgroundColor: black00,
         appBar: PreferredSize(
@@ -59,14 +60,20 @@ class ChatPage extends StatelessWidget {
                         if (link != null && link.isNotEmpty) {
                           final Uri url = Uri.parse(link);
                           if (await canLaunchUrl(url)) {
-                            await launchUrl(url, mode: LaunchMode.externalApplication);
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Tidak dapat membuka link')),
+                              const SnackBar(
+                                content: Text('Tidak dapat membuka link'),
+                              ),
                             );
                           }
                         }
-                      },                      shadow: [
+                      },
+                      shadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.05),
                           blurRadius: 4,
@@ -78,8 +85,11 @@ class ChatPage extends StatelessWidget {
                         padding: const EdgeInsets.all(12),
                         child: Row(
                           children: [
-                            SvgPicture.asset('assets/images/whatsapp.svg',
-                                width: 35, height: 35),
+                            SvgPicture.asset(
+                              'assets/images/whatsapp.svg',
+                              width: 35,
+                              height: 35,
+                            ),
                             SizedBox(width: spacing4),
                             Expanded(
                               child: Text(chat.name ?? '-', style: sRegular),
