@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'article_detail_model.g.dart';
+part 'article_model.g.dart';
 
 
 @JsonSerializable()
-class ArticleDetailModel {
+class ArticleModel {
   @JsonKey(name: "id")
   int? id;
   @JsonKey(name: "name")
@@ -18,7 +18,7 @@ class ArticleDetailModel {
   @JsonKey(name: "updated_at")
   DateTime? updatedAt;
 
-  ArticleDetailModel({
+  ArticleModel({
     this.id,
     this.name,
     this.image,
@@ -27,7 +27,7 @@ class ArticleDetailModel {
     this.updatedAt,
   });
 
-  factory ArticleDetailModel.fromJson(Map<String, dynamic> json) => _$ArticleDetailModelFromJson(json);
+  factory ArticleModel.fromJson(Map<String, dynamic> json) => _$ArticleModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ArticleDetailModelToJson(this);
+  Map<String, dynamic> toJson() => _$ArticleModelToJson(this);
 }

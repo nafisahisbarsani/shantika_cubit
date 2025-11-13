@@ -14,7 +14,7 @@ ArticleDetailResponse _$ArticleDetailResponseFromJson(
   message: json['message'] as String?,
   article: json['article'] == null
       ? null
-      : ArticleDetailModel.fromJson(json['article'] as Map<String, dynamic>),
+      : ArticleModel.fromJson(json['article'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ArticleDetailResponseToJson(

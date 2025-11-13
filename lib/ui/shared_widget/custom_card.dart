@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 import '../color.dart';
@@ -19,6 +20,8 @@ class CustomCard extends StatelessWidget {
     this.statusText,
     this.statusColor,
     this.statusTextColor,
+    this.statusIcon,
+    this.statusIconSize = 14,
   });
 
   final Widget child;
@@ -31,9 +34,13 @@ class CustomCard extends StatelessWidget {
   final Color color;
   final double? width;
   final double? height;
+
   final String? statusText;
   final Color? statusColor;
   final Color? statusTextColor;
+
+  final String? statusIcon; // ✅ SVG asset path (e.g. 'assets/icons/check.svg')
+  final double statusIconSize; // ✅ icon size
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +68,36 @@ class CustomCard extends StatelessWidget {
                 child: child,
               ),
 
+              // ✅ Status badge (text + optional SVG icon)
               if (statusText != null && statusText!.isNotEmpty)
                 Positioned(
                   top: 8,
                   right: 8,
                   child: Container(
-                    padding: EdgeInsets.all(6),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     decoration: BoxDecoration(
                       color: statusColor ?? Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text(
-                      statusText!,
-                      style: xsMedium.copyWith(color: black00)
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (statusIcon != null) ...[
+                          SvgPicture.asset(
+                            statusIcon!,
+                            width: statusIconSize,
+                            height: statusIconSize,
+                            color: statusTextColor ?? black00,
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                        Text(
+                          statusText!,
+                          style: xsMedium.copyWith(
+                            color: statusTextColor ?? black00,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -83,5 +107,4 @@ class CustomCard extends StatelessWidget {
       ),
     );
   }
-
 }

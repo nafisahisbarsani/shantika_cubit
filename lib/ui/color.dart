@@ -115,7 +115,7 @@ const Color red900 = Color(0xFF7D2D1F);
 const Color textNeutralPrimary = Color(0xFF09090B);
 const Color textDarkPrimary = Color(0xFF1F1F1F);
 const Color textDarkSecondary = Color(0xFF757575);
-const Color textDarkTertiary = Color(0xFF9E9E9E);
+const Color textDarkTertiary = Color(0xFF6B7280);
 const Color textLightPrimary = Color(0xFFFFFFFF);
 const Color textLightSecondary = Color(0xFFE0E0E0);
 const Color textNeutralSecondary = Color(0xFF71717A);
@@ -182,7 +182,7 @@ const Color bg = Color(0xFFFFFFFF);
 const Color bgLight = Color(0xFFFFFFFF);
 const Color bgDark = Color(0xFF0A0A0A);
 const Color bgSurfaceNeutralLight = Color(0xFFF5F5F5);
-const Color bgSurfaceNeutralDark = Color(0xFFEDEDED);
+const Color bgSurfaceNeutralDark = Color(0xFFE5E7EB);
 const Color bgBlack = Color(0xFF18181B);
 const Color bgSurfaceNeutral = Color(0xFFF4F4F5);
 const Color bgSurfaceNeutral2 = Color(0xFFE4E4E7);
@@ -230,11 +230,12 @@ const Color bgDisabled = Color(0xFFC2C2C2);
 const Color bgButtonContainedDisabled = Color(0xFFC2C2C2);
 const Color bgButtonOutlinedDisabled = Color(0xFFEDEDED);
 // const Color bgButtonOutlinedDefault   = Color(0xFFFFFFFF);
-const Color bgForm = Color(0xFFFFFFFF);
 const Color bgModal = Color(0xFFFFFFFF);
 const Color bgBackdrop = Color(0x333F3F46);
 const Color bgSwitch = Color(0xFFD4D4D8);
 const Color bgButtonSwitch = Color(0xFFFFFFFF);
+const Color bgForm = Color(0xFF49454F);
+
 
 // Border
 const Color borderNeutral = Color(0xFFE4E4E7);
@@ -242,7 +243,7 @@ const Color borderNeutralLight = Color(0x1A0A0A0A);
 const Color borderNeutralDark = Color(0x290A0A0A);
 const Color borderLight = Color(0xFFFFFFFF);
 const Color borderDark = Color(0xFF0A0A0A);
-const Color borderSurfacePrimary = Color(0xFFFFDFDF);
+const Color borderSurfacePrimary = Color(0xFFCCE9FF);
 const Color borderSurfaceSecondary = Color(0xFFFFE8D4);
 const Color borderSurfaceDanger = Color(0xFFFFC5C4);
 const Color borderSurfaceSuccess = Color(0xFFE1F4B2);
@@ -276,6 +277,7 @@ const Color borderFormDanger = Color(0xFFD64026);
 const Color borderSelectField = Color(0x14030712);
 const Color borderTable = Color(0xA0A0A0A);
 const Color notification = Color(0xFF9B9B9B);
+const Color borderarticle = Color(0xFFEDEDED);
 
 /// Jacarta
 const Color jacarta50 = Color(0xFFf0f0f9);

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:shantika_cubit/model/article_detail_model.dart';
+import 'package:shantika_cubit/model/article_model.dart';
 import 'package:shantika_cubit/utility/extensions/dio_exception_extensions.dart';
 import '../../../config/service_locator.dart';
 import '../../../model/response/api_response.dart';
@@ -27,14 +27,14 @@ class DetailArticleCubit extends Cubit<DetailArticleState> {
 
     switch (dataState) {
       case DataStateSuccess<ArticleDetailResponse>():
-        print("✅ Article fetched successfully: ${dataState.data?.article}");
+        print("Article fetched successfully: ${dataState.data?.article}");
         emit(
           DetailArticleStateSuccess(
-            data: dataState.data?.article ?? ArticleDetailModel(),
+            data: dataState.data?.article ?? ArticleModel(),
           ),
         );
       case DataStateError<ArticleDetailResponse>():
-        print("❌ Failed to fetch article: ${dataState.exception}");
+        print("Failed to fetch article: ${dataState.exception}");
         emit(
           DetailArticleStateError(
             message: dataState.exception?.parseMessage() ?? "",

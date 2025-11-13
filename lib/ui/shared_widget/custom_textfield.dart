@@ -1,30 +1,137 @@
 import 'package:flutter/material.dart';
-import '../color.dart';
-import '../typography.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shantika_cubit/ui/color.dart';
+import 'package:shantika_cubit/ui/dimension.dart';
+import 'package:shantika_cubit/ui/typography.dart';
 
-class CustomTextfield extends StatelessWidget {
-  final String text;
-  final bool isIcon;
-  final IconData icon;
-  CustomTextfield({super.key, required this.isIcon, required this.icon, required this.text});
+class CustomTextField extends StatelessWidget {
+  final String? title;
+  final String? labelText;
+  final String? hintText;
+  final bool isObsecure;
+  final TextEditingController? controller;
+  final Widget? prefixIcon;
+  final String? prefixSvg;
+  final Widget? suffixIcon;
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final InputDecoration? decoration;
+  final double? width;
+  final double height;
+  final ValueChanged<String>? onChanged;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final Color? borderColor;
+  final Color? focusedBorderColor;
+  final Color? titleColor;
+  final Color? hintColor;
+  final Color? textColor;
+  final double borderRadius;
+  final EdgeInsetsGeometry? prefixPadding;
+
+  const CustomTextField({
+    super.key,
+    this.title,
+    this.labelText,
+    this.hintText,
+    required this.isObsecure,
+    this.controller,
+    this.prefixIcon,
+    this.prefixSvg,
+    this.suffixIcon,
+    this.readOnly = false,
+    this.onTap,
+    this.decoration,
+    this.width,
+    this.height = 48,
+    this.onChanged,
+    this.keyboardType,
+    this.inputFormatters,
+    this.borderColor,
+    this.focusedBorderColor,
+    this.titleColor,
+    this.hintColor,
+    this.textColor,
+    this.borderRadius = borderRadius300,
+    this.prefixPadding,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: black00,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: black200),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          hintText: text,
-          hintStyle: sMedium.copyWith(color: textNeutralSecondary),
-          border: InputBorder.none,
-          suffixIcon: isIcon ? Icon(icon, color: iconDarkSecondary) : null,
+    final inputDecoration = InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      labelStyle: smMedium,
+      hintStyle: mdRegular.copyWith(color: hintColor ?? textDarkTertiary!),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      border: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: borderColor ?? borderNeutralDark!,
+          width: 1,
         ),
-        style: sRegular.copyWith(color: textNeutralPrimary),
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: focusedBorderColor ?? primaryColor,
+          width: 1.5,
+        ),
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: borderColor ?? Colors.grey[400]!,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
+
+      prefixIcon: (prefixSvg != null || prefixIcon != null)
+          ? Padding(
+        padding: prefixPadding ?? const EdgeInsets.only(left: 14, right: 10),
+        child: prefixSvg != null
+            ? SvgPicture.asset(prefixSvg!, width: 20, height: 20)
+            : prefixIcon,
+      )
+          : null,
+      prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+
+      suffixIcon: suffixIcon,
+      suffixIconColor: Colors.grey[600],
+
+      contentPadding: EdgeInsets.symmetric(
+        vertical: height / 3,
+        horizontal: 16,
+      ),
+    );
+
+    return Center(
+      child: SizedBox(
+        width: width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (title != null && title!.isNotEmpty) ...[
+              Text(
+                title!,
+                style: smMedium
+              ),
+              const SizedBox(height: 6),
+            ],
+            TextField(
+              controller: controller,
+              obscureText: isObsecure,
+              readOnly: readOnly,
+              onTap: onTap,
+              style: mdRegular,
+              decoration: decoration ?? inputDecoration,
+              onChanged: onChanged,
+              keyboardType: keyboardType,
+              inputFormatters: inputFormatters,
+            ),
+          ],
+        ),
       ),
     );
   }
