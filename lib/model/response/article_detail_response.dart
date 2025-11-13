@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:shantika_cubit/model/article_detail_model.dart';
+import 'package:shantika_cubit/model/article_model.dart';
 
 part 'article_detail_response.g.dart';
 
@@ -12,7 +12,7 @@ class ArticleDetailResponse {
   @JsonKey(name: "message")
   String? message;
   @JsonKey(name: "article")
-  ArticleDetailModel? article;
+  ArticleModel? article;
 
   ArticleDetailResponse({this.code, this.success, this.message, this.article});
 

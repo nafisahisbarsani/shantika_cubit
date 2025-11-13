@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shantika_cubit/features/pesan/detail_pesan_page.dart';
 import 'package:shantika_cubit/features/pesan/riwayat_page.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
@@ -99,6 +100,14 @@ class PesanPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final order = orders[index];
           return CustomCard(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DetailPesanPage(),
+                ),
+              );
+            },
             borderSide: BorderSide(width: 1, color: black50),
             borderRadius: BorderRadius.circular(borderRadius300),
             padding: EdgeInsets.all(16),

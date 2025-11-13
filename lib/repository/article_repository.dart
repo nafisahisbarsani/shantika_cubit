@@ -15,7 +15,9 @@ class ArticleRepository extends BaseRepository {
   }) async {
     try {
       final response = await _apiService.detailArticle(id: id);
-      return DataStateSuccess(response.data); // response.data is ArticleDetailResponse
+      return DataStateSuccess(
+        response.data,
+      ); // response.data is ArticleDetailResponse
     } on DioException catch (e) {
       return DataStateError<ArticleDetailResponse>(e);
     }

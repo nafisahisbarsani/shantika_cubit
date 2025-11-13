@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconly/iconly.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
+import 'package:shantika_cubit/features/order_ticket/order_ticket.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
 import 'package:intl/intl.dart';
 import '../../model/home_model.dart';
@@ -247,8 +248,6 @@ Widget _buildCarouselView(HomeModel homeData) {
 Widget _buildMenuView(HomeModel homeData) {
   final menus = homeData.customerMenu ?? [];
 
-  print('📱 Menu - Total items: ${menus.length}');
-
   if (menus.isEmpty) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -279,9 +278,29 @@ Widget _buildMenuView(HomeModel homeData) {
           itemCount: menus.length,
           itemBuilder: (context, index) {
             final menu = menus[index];
-            print('🔗 Menu item: ${menu.name} - Icon: ${menu.icon}');
+            final menuName = (menu.name ?? "").toLowerCase();
 
-            return _buildMenuItem(menu.icon ?? "", menu.name ?? "Menu");
+            return _buildMenuItem(
+              menu.icon ?? "",
+              menu.name ?? "Menu",
+              onTap: () {
+                if (menuName.contains("pesan tiket")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const OrderTicket()),
+                  );
+                } else if (menuName.contains("testimoni")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const TestimoniPage()),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Menu ${menu.name} belum tersedia")),
+                  );
+                }
+              },
+            );
           },
         ),
       ],
@@ -289,45 +308,52 @@ Widget _buildMenuView(HomeModel homeData) {
   );
 }
 
-Widget _buildMenuItem(String iconUrl, String title) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      ClipOval(
-        child: iconUrl.startsWith('http')
-            ? Image.network(
-                iconUrl,
-                fit: BoxFit.cover,
+Widget _buildMenuItem(
+    String iconUrl,
+    String title, {
+      VoidCallback? onTap,
+    }) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ClipOval(
+          child: iconUrl.startsWith('http')
+              ? Image.network(
+            iconUrl,
+            fit: BoxFit.cover,
+            width: 50,
+            height: 50,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
                 width: 50,
                 height: 50,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 50,
-                    height: 50,
-                    color: Colors.grey[300],
-                    child: Icon(Icons.error),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    width: 50,
-                    height: 50,
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                },
-              )
-            : Image.asset(iconUrl, fit: BoxFit.cover),
-      ),
-      SizedBox(height: 4),
-      Text(
-        title,
-        style: xxsRegular,
-        textAlign: TextAlign.center,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-    ],
+                color: Colors.grey[300],
+                child: const Icon(Icons.error),
+              );
+            },
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return const SizedBox(
+                width: 50,
+                height: 50,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            },
+          )
+              : Image.asset(iconUrl, fit: BoxFit.cover, width: 50, height: 50),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          title,
+          style: xxsRegular,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    ),
   );
 }
 

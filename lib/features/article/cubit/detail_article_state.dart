@@ -8,7 +8,7 @@ final class DetailArticleInitial extends DetailArticleState {}
 final class DetailArticleStateLoading extends DetailArticleState {}
 
 final class DetailArticleStateSuccess extends DetailArticleState {
-  final ArticleDetailModel data;
+  final ArticleModel data;
   final bool? isLiked;
 
   DetailArticleStateSuccess({required this.data, this.isLiked});

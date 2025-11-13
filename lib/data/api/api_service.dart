@@ -5,9 +5,11 @@ import 'package:shantika_cubit/model/response/about_us_response.dart';
 import '../../config/constant.dart';
 import '../../model/chat_model.dart';
 import '../../model/home_model.dart';
+import '../../model/response/agency_response.dart';
 import '../../model/response/api_response.dart';
 import '../../model/response/article_detail_response.dart';
 import '../../model/response/auth_response.dart';
+import '../../model/response/city_response.dart';
 import '../../model/response/faq_response.dart';
 import '../../model/response/notification_response.dart';
 import '../../model/response/notification_set_response.dart';
@@ -172,6 +174,18 @@ abstract class ApiService {
     @Path("id") required String id,
   });
 
+  /// City Destinations
+  @GET("/city_destination")
+  Future<HttpResponse<CityResponse>> getCityDestinations();
+
+  /// City Departure
+  @GET("/city_departure")
+  Future<HttpResponse<CityResponse>> getCityDepartures();
+
+  /// Agencies by City
+  @GET("/agency_city")
+  Future<HttpResponse<AgencyResponse>> getAgenciesByCity(
+      @Query("city_id") int cityId,);
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")
