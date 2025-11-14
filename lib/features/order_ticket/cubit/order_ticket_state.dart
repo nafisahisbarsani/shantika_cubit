@@ -31,3 +31,18 @@ final class OrderTicketAgencyData extends OrderTicketState {
   @override
   List<Object?> get props => [agencies];
 }
+
+class OrderTicketTimeClassificationData extends OrderTicketState {
+  final List<TimeClassificationModel> timeClassifications;
+
+  OrderTicketTimeClassificationData({required this.timeClassifications});
+}
+
+final class OrderTicketFleetData extends OrderTicketState {
+  final List<FleetModel> fleetClasses;
+
+  OrderTicketFleetData({required this.fleetClasses});
+
+  @override
+  List<Object?> get props => [fleetClasses];
+}

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconly/iconly.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
-import 'package:shantika_cubit/features/order_ticket/order_ticket.dart';
+import 'package:shantika_cubit/features/order_ticket/order_ticket_page.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
 import 'package:intl/intl.dart';
 import '../../model/home_model.dart';
@@ -66,7 +66,6 @@ class HomePage extends StatelessWidget {
                         _buildArticleView(context, homeData),
                         _buildTestimoniView(context, homeData),
                         const SizedBox(height: 20),
-
                       ],
                     ),
                   ],
@@ -287,7 +286,7 @@ Widget _buildMenuView(HomeModel homeData) {
                 if (menuName.contains("pesan tiket")) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const OrderTicket()),
+                    MaterialPageRoute(builder: (_) => const OrderTicketPage()),
                   );
                 } else if (menuName.contains("testimoni")) {
                   Navigator.push(
@@ -308,11 +307,7 @@ Widget _buildMenuView(HomeModel homeData) {
   );
 }
 
-Widget _buildMenuItem(
-    String iconUrl,
-    String title, {
-      VoidCallback? onTap,
-    }) {
+Widget _buildMenuItem(String iconUrl, String title, {VoidCallback? onTap}) {
   return GestureDetector(
     onTap: onTap,
     child: Column(
@@ -321,27 +316,27 @@ Widget _buildMenuItem(
         ClipOval(
           child: iconUrl.startsWith('http')
               ? Image.network(
-            iconUrl,
-            fit: BoxFit.cover,
-            width: 50,
-            height: 50,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: 50,
-                height: 50,
-                color: Colors.grey[300],
-                child: const Icon(Icons.error),
-              );
-            },
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const SizedBox(
-                width: 50,
-                height: 50,
-                child: Center(child: CircularProgressIndicator()),
-              );
-            },
-          )
+                  iconUrl,
+                  fit: BoxFit.cover,
+                  width: 50,
+                  height: 50,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: 50,
+                      height: 50,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.error),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                )
               : Image.asset(iconUrl, fit: BoxFit.cover, width: 50, height: 50),
         ),
         const SizedBox(height: 4),
@@ -571,9 +566,6 @@ Widget _buildHistoryView(HomeModel homeData) {
 
 Widget _buildPromoView(HomeModel homeData) {
   final promos = homeData.promo ?? [];
-
-  print('🎁 Promo - Total promos: ${promos.length}');
-
   return Padding(
     padding: EdgeInsets.all(20),
     child: Column(
@@ -665,14 +657,12 @@ Widget _buildPromoView(HomeModel homeData) {
 Widget _buildArticleView(BuildContext context, HomeModel homeData) {
   final articles = homeData.artikel ?? [];
 
-  print('📰 Articles - Total: ${articles.length}');
-
   if (articles.isEmpty) {
     return const SizedBox();
   }
 
   return Padding(
-    padding: EdgeInsets.only( right: 20, left: 20),
+    padding: EdgeInsets.only(right: 20, left: 20),
     child: Column(
       children: [
         Row(
@@ -700,18 +690,17 @@ Widget _buildArticleView(BuildContext context, HomeModel homeData) {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final article = articles[index];
-              print('📄 Article: ${article.name} - Image: ${article.image}');
               return CustomCard(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => ArtikelDetailPage(
-                        id: article.id.toString(),
-                      ),
+                      builder: (_) =>
+                          ArtikelDetailPage(id: article.id.toString()),
                     ),
                   );
-                },                color: black00,
+                },
+                color: black00,
                 margin: EdgeInsets.only(right: 10),
                 padding: EdgeInsets.all(8),
                 child: Column(
@@ -764,8 +753,6 @@ Widget _buildArticleView(BuildContext context, HomeModel homeData) {
 
 Widget _buildTestimoniView(BuildContext context, HomeModel homeData) {
   final testimonials = homeData.testimonial ?? [];
-
-  print('💬 Testimonials - Total: ${testimonials.length}');
 
   return Padding(
     padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),

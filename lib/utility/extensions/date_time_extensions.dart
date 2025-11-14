@@ -62,7 +62,16 @@ extension DateTimeExtensions on DateTime {
   }
 
   DateTime addMonths(int months) {
-    return DateTime(year, month + months, day, hour, minute, second, millisecond, microsecond);
+    return DateTime(
+      year,
+      month + months,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+    );
   }
 
   DateTime getFirstDateOfMonth() {
@@ -83,6 +92,42 @@ extension DateTimeExtensions on DateTime {
       return this.add(Duration(hours: 7)).toLocal();
     }
     return this;
+  }
+
+  String toReadableDate() {
+    const months = [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ];
+
+    final monthName = months[month - 1];
+    return '$day $monthName $year';
+  }
+
+  String toHourWIB() {
+    final hh = hour.toString().padLeft(2, '0');
+    final mm = minute.toString().padLeft(2, '0');
+    return '$hh.$mm WIB';
+  }
+
+  String formatApiTime(String? time) {
+    if (time == null || time.isEmpty) return '';
+
+    final parts = time.split(':');
+    final hh = parts[0];
+    final mm = parts[1];
+
+    return '$hh.$mm WIB';
   }
 
   // DayOfWeek get dayOfWeek {
