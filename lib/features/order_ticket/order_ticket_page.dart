@@ -5,6 +5,8 @@ import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 import 'package:shantika_cubit/utility/extensions/date_time_extensions.dart';
 import '../../model/agency_model.dart';
+import '../../model/fleet_model.dart';
+import '../../model/time_classification_model.dart';
 import '../../ui/shared_widget/custom_arrow.dart';
 import '../../ui/shared_widget/custom_button.dart';
 import '../../ui/shared_widget/custom_date_picker.dart';
@@ -12,18 +14,28 @@ import '../../ui/shared_widget/custom_textfield.dart';
 import '../../ui/shared_widget/sheet/custom_bottom_sheet.dart';
 import 'cubit/order_ticket_cubit.dart';
 
-class OrderTicket extends StatefulWidget {
-  const OrderTicket({super.key});
+class OrderTicketPage extends StatefulWidget {
+  const OrderTicketPage({super.key});
 
   @override
-  State<OrderTicket> createState() => _OrderTicketState();
+  State<OrderTicketPage> createState() => _OrderTicketPageState();
 }
 
-class _OrderTicketState extends State<OrderTicket> {
+class _OrderTicketPageState extends State<OrderTicketPage> {
   CityModel? selectedDepartureCity;
   CityModel? selectedDestinationCity;
   AgencyModel? selectedAgency;
   DateTime? selectedDate;
+  TimeClassificationModel? selectedTimeClassification;
+  FleetModel? selectedFleetClass;
+  bool get isFormComplete {
+    return selectedDepartureCity != null &&
+        selectedDestinationCity != null &&
+        selectedAgency != null &&
+        selectedDate != null &&
+        selectedTimeClassification != null &&
+        selectedFleetClass != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +52,10 @@ class _OrderTicketState extends State<OrderTicket> {
           padding: const EdgeInsets.all(20),
           child: CustomButton(
             child: Text("Cari", style: mdMedium.copyWith(color: black00)),
-            onPressed: () {},
-            backgroundColor: bgButtonContainedDisabled,
+            onPressed: isFormComplete ? () {} : null,
+            backgroundColor: isFormComplete
+                ? jacarta800
+                : bgButtonContainedDisabled,
           ),
         ),
       ),
@@ -139,7 +153,7 @@ class _OrderTicketState extends State<OrderTicket> {
                 child: CustomTextField(
                   isObsecure: false,
                   hintText: selectedDate != null
-                      ? selectedDate!.convert()
+                      ? selectedDate!.toReadableDate()
                       : "Pilih Tanggal",
                   hintColor: textDarkTertiary,
                   title: "Tanggal Berangkat",
@@ -170,13 +184,21 @@ class _OrderTicketState extends State<OrderTicket> {
               Expanded(
                 child: CustomTextField(
                   isObsecure: false,
-                  hintText: "Pilih Waktu",
+                  hintText: selectedTimeClassification?.name ?? "Pilih Waktu",
                   hintColor: textDarkTertiary,
                   title: "Waktu Berangkat",
                   titleColor: black950,
                   prefixSvg: "assets/images/ic_time.svg",
                   readOnly: true,
-                  onTap: () {},
+                  onTap: () => _showTimeClassificationBottomSheet(
+                    context: context,
+                    selectedTimeClassification: selectedTimeClassification,
+                    onSelected: (timeClassification) {
+                      setState(() {
+                        selectedTimeClassification = timeClassification;
+                      });
+                    },
+                  ),
                 ),
               ),
             ],
@@ -184,13 +206,21 @@ class _OrderTicketState extends State<OrderTicket> {
           const SizedBox(height: 20),
           CustomTextField(
             isObsecure: false,
-            hintText: "Pilih Kelas Armada",
+            hintText: selectedFleetClass?.name ?? "Pilih Kelas Armada",
             hintColor: textDarkTertiary,
             title: "Kelas Keberangkatan",
             titleColor: black950,
             prefixSvg: "assets/images/ic_bus.svg",
             readOnly: true,
-            onTap: () {},
+            onTap: () => _showFleetBottomSheet(
+              context: context,
+              selectedFleet: selectedFleetClass,
+              onSelected: (fleet) {
+                setState(() {
+                  selectedFleetClass = fleet;
+                });
+              },
+            ),
           ),
         ],
       ),
@@ -294,6 +324,98 @@ class _OrderTicketState extends State<OrderTicket> {
               isLoading: isLoading,
               errorMessage: errorMessage,
               onRetry: () => cubit.fetchAgenciesByCity(cityId),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showTimeClassificationBottomSheet({
+    required BuildContext context,
+    required TimeClassificationModel? selectedTimeClassification,
+    required Function(TimeClassificationModel) onSelected,
+  }) {
+    final cubit = context.read<OrderTicketCubit>();
+    cubit.fetchTimeClassifications();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) {
+        return BlocBuilder<OrderTicketCubit, OrderTicketState>(
+          builder: (context, state) {
+            List<TimeClassificationModel> timeClassifications = [];
+            bool isLoading = false;
+            String? errorMessage;
+
+            if (state is OrderTicketLoading) {
+              isLoading = true;
+            } else if (state is OrderTicketError) {
+              errorMessage = state.message;
+            } else if (state is OrderTicketTimeClassificationData) {
+              timeClassifications = state.timeClassifications;
+            }
+
+            return SelectionBottomSheet<TimeClassificationModel>(
+              title: "Pilih Waktu",
+              items: timeClassifications,
+              selectedItem: selectedTimeClassification,
+              onItemSelected: onSelected,
+              getItemName: (time) =>
+                  '${time.name ?? ''} ${time.timeStart ?? ''} - ${time.timeEnd ?? ''}',
+              getItemId: (time) => time.id?.toString() ?? '',
+              searchHint: 'Cari Waktu',
+              showSearch: false,
+              isLoading: isLoading,
+              errorMessage: errorMessage,
+              onRetry: () => cubit.fetchTimeClassifications(),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showFleetBottomSheet({
+    required BuildContext context,
+    required FleetModel? selectedFleet,
+    required Function(FleetModel) onSelected,
+  }) {
+    final cubit = context.read<OrderTicketCubit>();
+    cubit.fetchFleetClasses();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) {
+        return BlocBuilder<OrderTicketCubit, OrderTicketState>(
+          builder: (context, state) {
+            List<FleetModel> fleetClasses = [];
+            bool isLoading = false;
+            String? errorMessage;
+
+            if (state is OrderTicketLoading) {
+              isLoading = true;
+            } else if (state is OrderTicketError) {
+              errorMessage = state.message;
+            } else if (state is OrderTicketFleetData) {
+              fleetClasses = state.fleetClasses;
+            }
+
+            return SelectionBottomSheet<FleetModel>(
+              title: "Pilih Kelas Armada",
+              items: fleetClasses,
+              selectedItem: selectedFleet,
+              onItemSelected: onSelected,
+              getItemName: (fleet) => fleet.name ?? '',
+              getItemId: (fleet) => fleet.id?.toString() ?? '',
+              searchHint: 'Cari Kelas Armada',
+              isLoading: isLoading,
+              errorMessage: errorMessage,
+              onRetry: () => cubit.fetchFleetClasses(),
             );
           },
         );

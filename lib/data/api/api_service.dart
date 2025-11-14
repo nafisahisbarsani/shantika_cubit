@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:shantika_cubit/model/response/about_us_response.dart';
+import 'package:shantika_cubit/model/response/fleet_response.dart';
 import '../../config/constant.dart';
 import '../../model/chat_model.dart';
 import '../../model/home_model.dart';
@@ -15,6 +16,7 @@ import '../../model/response/notification_response.dart';
 import '../../model/response/notification_set_response.dart';
 import '../../model/response/privacy_policy_response.dart';
 import '../../model/response/terms_response.dart';
+import '../../model/response/time_classification_response.dart';
 import '../../model/user_model.dart';
 part 'api_service.g.dart';
 
@@ -185,7 +187,16 @@ abstract class ApiService {
   /// Agencies by City
   @GET("/agency_city")
   Future<HttpResponse<AgencyResponse>> getAgenciesByCity(
-      @Query("city_id") int cityId,);
+    @Query("city_id") int cityId,
+  );
+
+  /// Time Classification
+  @GET("/time")
+  Future<HttpResponse<TimeClassificationResponse>> getTimeClassification();
+
+  /// Fleet Class
+  @GET("/fleet_classes")
+  Future<HttpResponse<FleetResponse>> getFleet();
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

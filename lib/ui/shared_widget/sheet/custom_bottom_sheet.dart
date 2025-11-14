@@ -13,6 +13,7 @@ class SelectionBottomSheet<T> extends StatefulWidget {
   final bool isLoading;
   final String? errorMessage;
   final VoidCallback? onRetry;
+  final bool showSearch; // NEW FLAG
 
   const SelectionBottomSheet({
     Key? key,
@@ -26,6 +27,7 @@ class SelectionBottomSheet<T> extends StatefulWidget {
     this.isLoading = false,
     this.errorMessage,
     this.onRetry,
+    this.showSearch = true, // default true
   }) : super(key: key);
 
   @override
@@ -65,10 +67,10 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
         filteredItems = widget.items
             .where(
               (item) => widget
-                  .getItemName(item)
-                  .toLowerCase()
-                  .contains(query.toLowerCase()),
-            )
+              .getItemName(item)
+              .toLowerCase()
+              .contains(query.toLowerCase()),
+        )
             .toList();
       }
     });
@@ -83,7 +85,7 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
+      height: MediaQuery.of(context).size.height * 0.5,
       decoration: const BoxDecoration(
         color: black00,
         borderRadius: BorderRadius.only(
@@ -106,29 +108,32 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(widget.title, style: mdMedium),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: borderNeutralDark),
-              ),
-              child: TextField(
-                controller: searchController,
-                onChanged: _filterItems,
-                decoration: InputDecoration(
-                  hintText: widget.searchHint,
-                  hintStyle: smRegular.copyWith(color: textDarkTertiary),
-                  prefixIcon: Icon(Icons.search, color: iconDarkTertiary),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
+
+          // Only show search if showSearch = true
+          if (widget.showSearch)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: borderNeutralDark),
+                ),
+                child: TextField(
+                  controller: searchController,
+                  onChanged: _filterItems,
+                  decoration: InputDecoration(
+                    hintText: widget.searchHint,
+                    hintStyle: smRegular.copyWith(color: textDarkTertiary),
+                    prefixIcon: Icon(Icons.search, color: iconDarkTertiary),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
           const SizedBox(height: 16),
 
@@ -136,81 +141,87 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
             child: widget.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : widget.errorMessage != null
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.error_outline,
-                            size: 48,
-                            color: errorColor,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            widget.errorMessage!,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: errorColor),
-                          ),
-                          if (widget.onRetry != null) ...[
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: widget.onRetry,
-                              child: const Text('Coba Lagi'),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  )
-                : filteredItems.isEmpty
-                ? const Center(
-                    child: Text('Tidak ada data ditemukan', style: smMedium),
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: filteredItems.length,
-                    itemBuilder: (context, index) {
-                      final item = filteredItems[index];
-                      final itemId = widget.getItemId?.call(item);
-                      final selectedId = widget.selectedItem != null
-                          ? widget.getItemId?.call(widget.selectedItem!)
-                          : null;
-                      final isSelected = itemId == selectedId;
-
-                      return InkWell(
-                        onTap: () {
-                          widget.onItemSelected(item);
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFF2D3250)
-                                : Colors.transparent,
-                          ),
-                          child: Text(
-                            widget.getItemName(item),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: isSelected ? Colors.white : Colors.black,
-                              fontWeight: isSelected
-                                  ? FontWeight.w500
-                                  : FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                ? _buildErrorView()
+                : _buildItemList(),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildErrorView() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 48,
+              color: errorColor,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              widget.errorMessage!,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: errorColor),
+            ),
+            if (widget.onRetry != null) ...[
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: widget.onRetry,
+                child: const Text('Coba Lagi'),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItemList() {
+    if (filteredItems.isEmpty) {
+      return const Center(
+        child: Text('Tidak ada data ditemukan', style: smMedium),
+      );
+    }
+
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: filteredItems.length,
+      itemBuilder: (context, index) {
+        final item = filteredItems[index];
+        final itemId = widget.getItemId?.call(item);
+        final selectedId = widget.selectedItem != null
+            ? widget.getItemId?.call(widget.selectedItem!)
+            : null;
+        final isSelected = itemId == selectedId;
+
+        return InkWell(
+          onTap: () {
+            widget.onItemSelected(item);
+            Navigator.pop(context);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 16,
+            ),
+            decoration: BoxDecoration(
+              color: isSelected ? const Color(0xFF2D3250) : Colors.transparent,
+            ),
+            child: Text(
+              widget.getItemName(item),
+              style: TextStyle(
+                fontSize: 16,
+                color: isSelected ? Colors.white : Colors.black,
+                fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
