@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shantika_cubit/ui/color.dart';
+import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 
 class SelectionBottomSheet<T> extends StatefulWidget {
@@ -13,7 +14,7 @@ class SelectionBottomSheet<T> extends StatefulWidget {
   final bool isLoading;
   final String? errorMessage;
   final VoidCallback? onRetry;
-  final bool showSearch; // NEW FLAG
+  final bool showSearch;
 
   const SelectionBottomSheet({
     Key? key,
@@ -27,7 +28,7 @@ class SelectionBottomSheet<T> extends StatefulWidget {
     this.isLoading = false,
     this.errorMessage,
     this.onRetry,
-    this.showSearch = true, // default true
+    this.showSearch = true,
   }) : super(key: key);
 
   @override
@@ -67,10 +68,10 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
         filteredItems = widget.items
             .where(
               (item) => widget
-              .getItemName(item)
-              .toLowerCase()
-              .contains(query.toLowerCase()),
-        )
+                  .getItemName(item)
+                  .toLowerCase()
+                  .contains(query.toLowerCase()),
+            )
             .toList();
       }
     });
@@ -89,8 +90,8 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
       decoration: const BoxDecoration(
         color: black00,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+          topLeft: Radius.circular(borderRadius500),
+          topRight: Radius.circular(borderRadius500),
         ),
       ),
       child: Column(
@@ -106,10 +107,9 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Text(widget.title, style: mdMedium),
+            child: Text(widget.title, style: smRegular),
           ),
 
-          // Only show search if showSearch = true
           if (widget.showSearch)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -156,11 +156,7 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 48,
-              color: errorColor,
-            ),
+            const Icon(Icons.error_outline, size: 48, color: errorColor),
             const SizedBox(height: 16),
             Text(
               widget.errorMessage!,
@@ -204,19 +200,14 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
             Navigator.pop(context);
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
               color: isSelected ? const Color(0xFF2D3250) : Colors.transparent,
             ),
             child: Text(
               widget.getItemName(item),
-              style: TextStyle(
-                fontSize: 16,
-                color: isSelected ? Colors.white : Colors.black,
-                fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+              style: smRegular.copyWith(
+                color: isSelected ? black00 : black950,
               ),
             ),
           ),

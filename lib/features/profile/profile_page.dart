@@ -14,6 +14,7 @@ import '../faq/faq_page.dart';
 import '../notif_set/notification_set.dart';
 import 'cubit/logout_cubit.dart';
 import 'cubit/profile_cubit.dart';
+import 'logout_pop_up.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -283,32 +284,18 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _buildButton(BuildContext context) {
-    return BlocBuilder<LogoutCubit, LogoutState>(
-      builder: (context, state) {
-        final isLoading = state is LogoutStateLoading;
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: CustomButton(
-            onPressed: isLoading
-                ? null
-                : () {
-              context.read<LogoutCubit>().logout();
-            },
-            child: isLoading
-                ? const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            )
-                : Text("Keluar", style: mdMedium.copyWith(color: black00)),
-            backgroundColor: bgFillDanger,
-          ),
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomButton(
+        onPressed: () {
+          showLogoutDialog(context);
+        },
+        child: Text(
+          "Keluar",
+          style: mdMedium.copyWith(color: black00),
+        ),
+        backgroundColor: bgFillDanger,
+      ),
     );
   }
 }

@@ -89,11 +89,12 @@ class CustomTextField extends StatelessWidget {
 
       prefixIcon: (prefixSvg != null || prefixIcon != null)
           ? Padding(
-        padding: prefixPadding ?? const EdgeInsets.only(left: 14, right: 10),
-        child: prefixSvg != null
-            ? SvgPicture.asset(prefixSvg!, width: 20, height: 20)
-            : prefixIcon,
-      )
+              padding:
+                  prefixPadding ?? const EdgeInsets.only(left: 14, right: 10),
+              child: prefixSvg != null
+                  ? SvgPicture.asset(prefixSvg!, width: 20, height: 20)
+                  : prefixIcon,
+            )
           : null,
       prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
 
@@ -113,10 +114,7 @@ class CustomTextField extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (title != null && title!.isNotEmpty) ...[
-              Text(
-                title!,
-                style: smMedium
-              ),
+              Text(title!, style: smMedium),
               const SizedBox(height: 6),
             ],
             TextField(
