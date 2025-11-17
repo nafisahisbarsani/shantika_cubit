@@ -3,6 +3,7 @@ import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:shantika_cubit/model/response/about_us_response.dart';
 import 'package:shantika_cubit/model/response/fleet_response.dart';
+import 'package:shantika_cubit/model/response/info_agen_response.dart';
 import '../../config/constant.dart';
 import '../../model/chat_model.dart';
 import '../../model/home_model.dart';
@@ -12,6 +13,7 @@ import '../../model/response/article_detail_response.dart';
 import '../../model/response/auth_response.dart';
 import '../../model/response/city_response.dart';
 import '../../model/response/faq_response.dart';
+import '../../model/response/info_city_response.dart';
 import '../../model/response/notification_response.dart';
 import '../../model/response/notification_set_response.dart';
 import '../../model/response/privacy_policy_response.dart';
@@ -197,6 +199,16 @@ abstract class ApiService {
   /// Fleet Class
   @GET("/fleet_classes")
   Future<HttpResponse<FleetResponse>> getFleet();
+
+  /// Cities Info
+  @GET("/cities_all")
+  Future<HttpResponse<InfoCityResponse>> getInfoCities();
+
+  /// Get Info Agen
+  @GET("/agencies")
+  Future<HttpResponse<InfoAgenResponse>> getInfoAgen({
+    @Query("city_id") required int cityId,
+  });
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

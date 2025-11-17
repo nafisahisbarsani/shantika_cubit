@@ -278,6 +278,7 @@ const Color borderSelectField = Color(0x14030712);
 const Color borderTable = Color(0xA0A0A0A);
 const Color notification = Color(0xFF9B9B9B);
 const Color borderarticle = Color(0xFFEDEDED);
+const Color agen = Color(0xFFF1F1F9);
 
 /// Jacarta
 const Color jacarta50 = Color(0xFFf0f0f9);

@@ -84,7 +84,6 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
       child: Column(
         children: [
           CustomTextField(
-            isObsecure: false,
             hintText: selectedDepartureCity?.name ?? "Pilih Kota ",
             hintColor: textDarkTertiary,
             title: "Kota Keberangkatan",
@@ -106,7 +105,6 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
           ),
           const SizedBox(height: 20),
           CustomTextField(
-            isObsecure: false,
             hintText: selectedAgency?.name ?? "Pilih Agen",
             hintColor: textDarkTertiary,
             title: "Agen Keberangkatan",
@@ -128,7 +126,6 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
           ),
           const SizedBox(height: 20),
           CustomTextField(
-            isObsecure: false,
             hintText: selectedDestinationCity?.name ?? "Pilih Tempat Tujuan",
             hintColor: textDarkTertiary,
             title: "Kota Tujuan",
@@ -151,7 +148,6 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
             children: [
               Expanded(
                 child: CustomTextField(
-                  isObsecure: false,
                   hintText: selectedDate != null
                       ? selectedDate!.toReadableDate()
                       : "Pilih Tanggal",
@@ -183,7 +179,6 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
               const SizedBox(width: 15),
               Expanded(
                 child: CustomTextField(
-                  isObsecure: false,
                   hintText: selectedTimeClassification?.name ?? "Pilih Waktu",
                   hintColor: textDarkTertiary,
                   title: "Waktu Berangkat",
@@ -205,7 +200,6 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
           ),
           const SizedBox(height: 20),
           CustomTextField(
-            isObsecure: false,
             hintText: selectedFleetClass?.name ?? "Pilih Kelas Armada",
             hintColor: textDarkTertiary,
             title: "Kelas Keberangkatan",
@@ -261,23 +255,28 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
               cities = state.cities;
             }
 
-            return SelectionBottomSheet<CityModel>(
-              title: title,
-              items: cities,
-              selectedItem: selectedCity,
-              onItemSelected: onSelected,
-              getItemName: (city) => city.name ?? '',
-              getItemId: (city) => city.id?.toString() ?? '',
-              searchHint: 'Cari Kota',
-              isLoading: isLoading,
-              errorMessage: errorMessage,
-              onRetry: () {
-                if (isDeparture) {
-                  cubit.fetchCityDepartures();
-                } else {
-                  cubit.fetchCityDestinations();
-                }
-              },
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SelectionBottomSheet<CityModel>(
+                title: title,
+                items: cities,
+                selectedItem: selectedCity,
+                onItemSelected: onSelected,
+                getItemName: (city) => city.name ?? '',
+                getItemId: (city) => city.id?.toString() ?? '',
+                searchHint: 'Cari Kota',
+                isLoading: isLoading,
+                errorMessage: errorMessage,
+                onRetry: () {
+                  if (isDeparture) {
+                    cubit.fetchCityDepartures();
+                  } else {
+                    cubit.fetchCityDestinations();
+                  }
+                },
+              ),
             );
           },
         );
@@ -313,17 +312,22 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
               agencies = state.agencies;
             }
 
-            return SelectionBottomSheet<AgencyModel>(
-              title: "Pilih Agen Keberangkatan",
-              items: agencies,
-              selectedItem: selectedAgency,
-              onItemSelected: onSelected,
-              getItemName: (agency) => agency.name ?? '',
-              getItemId: (agency) => agency.id?.toString() ?? '',
-              searchHint: 'Cari Agen',
-              isLoading: isLoading,
-              errorMessage: errorMessage,
-              onRetry: () => cubit.fetchAgenciesByCity(cityId),
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SelectionBottomSheet<AgencyModel>(
+                title: "Pilih Agen Keberangkatan",
+                items: agencies,
+                selectedItem: selectedAgency,
+                onItemSelected: onSelected,
+                getItemName: (agency) => agency.name ?? '',
+                getItemId: (agency) => agency.id?.toString() ?? '',
+                searchHint: 'Cari Agen',
+                isLoading: isLoading,
+                errorMessage: errorMessage,
+                onRetry: () => cubit.fetchAgenciesByCity(cityId),
+              ),
             );
           },
         );
@@ -405,17 +409,22 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
               fleetClasses = state.fleetClasses;
             }
 
-            return SelectionBottomSheet<FleetModel>(
-              title: "Pilih Kelas Armada",
-              items: fleetClasses,
-              selectedItem: selectedFleet,
-              onItemSelected: onSelected,
-              getItemName: (fleet) => fleet.name ?? '',
-              getItemId: (fleet) => fleet.id?.toString() ?? '',
-              searchHint: 'Cari Kelas Armada',
-              isLoading: isLoading,
-              errorMessage: errorMessage,
-              onRetry: () => cubit.fetchFleetClasses(),
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SelectionBottomSheet<FleetModel>(
+                title: "Pilih Kelas Armada",
+                items: fleetClasses,
+                selectedItem: selectedFleet,
+                onItemSelected: onSelected,
+                getItemName: (fleet) => fleet.name ?? '',
+                getItemId: (fleet) => fleet.id?.toString() ?? '',
+                searchHint: 'Cari Kelas Armada',
+                isLoading: isLoading,
+                errorMessage: errorMessage,
+                onRetry: () => cubit.fetchFleetClasses(),
+              ),
             );
           },
         );

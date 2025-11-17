@@ -71,7 +71,6 @@ Widget _buildSearchBar() {
   return Padding(
     padding: const EdgeInsets.only(left: 20, right: 20, top: 12),
     child: CustomTextField(
-      isObsecure: false,
       suffixIcon: Icon(Icons.search_outlined),
       hintText: "Cari Artikel",
       borderRadius: 20,
