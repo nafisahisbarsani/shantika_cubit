@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconly/iconly.dart';
+import 'package:shantika_cubit/features/agen/info_agen_city_page.dart';
+import 'package:shantika_cubit/features/agen/info_agen_dart.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
 import 'package:shantika_cubit/features/order_ticket/order_ticket_page.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
@@ -288,10 +290,10 @@ Widget _buildMenuView(HomeModel homeData) {
                     context,
                     MaterialPageRoute(builder: (_) => const OrderTicketPage()),
                   );
-                } else if (menuName.contains("testimoni")) {
+                } else if (menuName.contains("informasi agen")) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const TestimoniPage()),
+                    MaterialPageRoute(builder: (_) => const InfoAgenCityPage()),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

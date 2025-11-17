@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:shantika_cubit/features/about_us/cubit/about_us_cubit.dart';
+import 'package:shantika_cubit/features/agen/cubit/info_agen_cubit.dart';
+import 'package:shantika_cubit/features/agen/cubit/info_city_cubit.dart';
 import 'package:shantika_cubit/features/article/cubit/detail_article_cubit.dart';
 import 'package:shantika_cubit/features/authentication/login/cubit/login_phone_cubit.dart';
 import 'package:shantika_cubit/features/chat/cubit/chat_cubit.dart';
@@ -61,6 +63,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => HomeCubit()),
         BlocProvider(create: (context) => DetailArticleCubit()),
         BlocProvider(create: (context) => OrderTicketCubit()),
+        BlocProvider(create: (context) => InfoCityCubit()),
+        BlocProvider(create: (context) => InfoAgenCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
