@@ -39,13 +39,6 @@ Widget _buildHeader() {
   return Container(
     decoration: BoxDecoration(
       color: black00,
-      boxShadow: [
-        BoxShadow(
-          color: black200.withOpacity(0.3),
-          blurRadius: 8,
-          offset: const Offset(0, 3),
-        ),
-      ],
     ),
     child: const CustomArrow(title: "Informasi Agen"),
   );
@@ -65,7 +58,8 @@ Widget _buildSearchBar() {
           borderRadius: 20,
           hintColor: bgForm,
           bgColor: agen,
-          borderColor: black00,
+          borderColor: agen,
+
           onChanged: (value) {
             print('TextField onChanged called: $value'); // Debug
             context.read<InfoCityCubit>().searchCity(value);
@@ -111,7 +105,7 @@ Widget _cityItem(BuildContext context, InfoCityModel model) {
       shadow: [
         BoxShadow(color: black100, blurRadius: 6, offset: const Offset(0, 3)),
       ],
-      borderSide: BorderSide(width: 1, color: black100),
+      borderSide: BorderSide(width: 1, color: black50),
       borderRadius: BorderRadius.circular(16),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import '../../model/home_model.dart';
 import '../../ui/color.dart';
 import '../../ui/dimension.dart';
-import '../../ui/shared_widget/CustomCarouselCard.dart';
+import '../../ui/shared_widget/custom_carousel_card.dart';
 import '../../ui/shared_widget/custom_button.dart';
 import '../../ui/shared_widget/custom_card.dart';
 import '../../ui/shared_widget/custom_section_divider.dart';
