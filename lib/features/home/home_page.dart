@@ -5,6 +5,7 @@ import 'package:iconly/iconly.dart';
 import 'package:shantika_cubit/features/agen/info_agen_city_page.dart';
 import 'package:shantika_cubit/features/agen/info_agen_dart.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
+import 'package:shantika_cubit/features/fleet/fleet_class_page.dart';
 import 'package:shantika_cubit/features/order_ticket/order_ticket_page.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
 import 'package:intl/intl.dart';
@@ -294,6 +295,11 @@ Widget _buildMenuView(HomeModel homeData) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const InfoAgenCityPage()),
+                  );
+                } else if (menuName.contains("informasi kelas armada")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const FleetClassPage()),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

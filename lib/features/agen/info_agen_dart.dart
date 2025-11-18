@@ -36,9 +36,7 @@ class InfoAgenPage extends StatelessWidget {
 
 Widget _buildHeader() {
   return Container(
-    decoration: BoxDecoration(
-      color: black00,
-    ),
+    decoration: BoxDecoration(color: black00),
     child: const CustomArrow(title: "Informasi Agen"),
   );
 }

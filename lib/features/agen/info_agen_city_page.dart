@@ -37,9 +37,7 @@ class InfoAgenCityPage extends StatelessWidget {
 
 Widget _buildHeader() {
   return Container(
-    decoration: BoxDecoration(
-      color: black00,
-    ),
+    decoration: BoxDecoration(color: black00),
     child: const CustomArrow(title: "Informasi Agen"),
   );
 }
@@ -103,10 +101,11 @@ Widget _cityItem(BuildContext context, InfoCityModel model) {
     padding: const EdgeInsets.only(bottom: 12),
     child: CustomCard(
       shadow: [
-        BoxShadow(color: black100, blurRadius: 6, offset: const Offset(0, 3)),
+        BoxShadow(color: black100, blurRadius: 3, offset: const Offset(0, 2)),
       ],
       borderSide: BorderSide(width: 1, color: black50),
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(borderRadius300),
+
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
