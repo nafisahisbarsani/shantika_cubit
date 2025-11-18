@@ -8,6 +8,8 @@ class CustomSectionDivider extends StatelessWidget {
   final double horizontalPadding;
   final double lineHeight;
   final double lineThickness;
+  final Color lineColor;
+  final TextStyle? textStyle;
 
   const CustomSectionDivider({
     super.key,
@@ -16,6 +18,8 @@ class CustomSectionDivider extends StatelessWidget {
     this.horizontalPadding = 2,
     this.lineHeight = 20,
     this.lineThickness = 3,
+    this.lineColor = borderFillPrimary,
+    this.textStyle,
   });
 
   @override
@@ -28,13 +32,12 @@ class CustomSectionDivider extends StatelessWidget {
           Container(
             width: lineThickness,
             height: lineHeight,
-            color: borderFillPrimary,
+            color: lineColor,
           ),
-          SizedBox(width: 8),
-          // Text
+          const SizedBox(width: 8),
           Text(
             text,
-            style:smSemiBold,
+            style: textStyle ?? smSemiBold,
           ),
         ],
       ),

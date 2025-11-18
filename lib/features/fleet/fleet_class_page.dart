@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shantika_cubit/features/fleet/fleet_class_detail.dart';
 import '../../ui/color.dart';
 import '../../ui/dimension.dart';
 import '../../ui/typography.dart';
@@ -128,8 +129,14 @@ Widget _buildFleetList() {
                     ),
 
                     TextButton(
-                      onPressed: () {},
-                      child: Text(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => FleetClassDetail( fleetClassId: fleet.id!,),
+                          ),
+                        );
+                      },                      child: Text(
                         "Lihat Selengkapnya",
                         style: xsMedium.copyWith(color: black950),
                       ),

@@ -13,6 +13,7 @@ import '../../model/response/article_detail_response.dart';
 import '../../model/response/auth_response.dart';
 import '../../model/response/city_response.dart';
 import '../../model/response/faq_response.dart';
+import '../../model/response/fleet_class_detail_response.dart';
 import '../../model/response/info_city_response.dart';
 import '../../model/response/notification_response.dart';
 import '../../model/response/notification_set_response.dart';
@@ -208,6 +209,12 @@ abstract class ApiService {
   @GET("/agencies")
   Future<HttpResponse<InfoAgenResponse>> getInfoAgen({
     @Query("city_id") required int cityId,
+  });
+
+  /// Fleet Class Detail
+  @GET("/customer/fleet_lists")
+  Future<HttpResponse<FleetClassDetailResponse>> getFleetClassDetail({
+    @Query("fleet_class_id") required int fleetClassId,
   });
 
   // /// Memberi Laiks

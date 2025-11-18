@@ -7,6 +7,7 @@ import 'package:shantika_cubit/features/agen/cubit/info_city_cubit.dart';
 import 'package:shantika_cubit/features/article/cubit/detail_article_cubit.dart';
 import 'package:shantika_cubit/features/authentication/login/cubit/login_phone_cubit.dart';
 import 'package:shantika_cubit/features/chat/cubit/chat_cubit.dart';
+import 'package:shantika_cubit/features/fleet/cubit/fleet_class_cubit.dart';
 import 'package:shantika_cubit/features/home/cubit/home_cubit.dart';
 import 'package:shantika_cubit/features/order_ticket/cubit/order_ticket_cubit.dart';
 import 'package:shantika_cubit/features/privacy_policy/cubit/privacy_policy_cubit.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => OrderTicketCubit()),
         BlocProvider(create: (context) => InfoCityCubit()),
         BlocProvider(create: (context) => InfoAgenCubit()),
+        BlocProvider(create: (context) => FleetClassCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
