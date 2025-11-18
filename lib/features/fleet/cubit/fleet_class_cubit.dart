@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../../model/fleet_model.dart';
-import '../../../repository/fleet_class-repository.dart';
+import '../../../repository/fleet_class_repository.dart';
 import '../../../config/service_locator.dart';
 import '../../../utility/resource/data_state.dart';
 import '../../../utility/extensions/dio_exception_extensions.dart';
