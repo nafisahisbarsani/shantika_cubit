@@ -7,6 +7,7 @@ import 'package:shantika_cubit/features/agen/info_agen_dart.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
 import 'package:shantika_cubit/features/fleet/fleet_class_page.dart';
 import 'package:shantika_cubit/features/order_ticket/order_ticket_page.dart';
+import 'package:shantika_cubit/features/social_media/social_media_page.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
 import 'package:intl/intl.dart';
 import '../../model/home_model.dart';
@@ -300,6 +301,11 @@ Widget _buildMenuView(HomeModel homeData) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const FleetClassPage()),
+                  );
+                } else if (menuName.contains("sosial media")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SocialMediaPage()),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
