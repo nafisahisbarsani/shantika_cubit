@@ -9,7 +9,7 @@ import 'package:shantika_cubit/features/authentication/login/cubit/login_phone_c
 import 'package:shantika_cubit/features/chat/cubit/chat_cubit.dart';
 import 'package:shantika_cubit/features/fleet/cubit/fleet_class_cubit.dart';
 import 'package:shantika_cubit/features/home/cubit/home_cubit.dart';
-import 'package:shantika_cubit/features/order_ticket/cubit/order_ticket_cubit.dart';
+import 'package:shantika_cubit/features/order/cubit/order_history_cubit.dart';
 import 'package:shantika_cubit/features/privacy_policy/cubit/privacy_policy_cubit.dart';
 import 'package:shantika_cubit/features/profile/cubit/profile_cubit.dart';
 import 'package:shantika_cubit/features/social_media/cubit/social_media_cubit.dart';
@@ -27,6 +27,7 @@ import 'features/navigation/cubit/update_fcm_token_cubit.dart';
 import 'features/notif/cubit/notification_cubit.dart';
 import 'features/notif/cubit/read_notification_cubit.dart';
 import 'features/notif_set/cubit/notification_set_cubit.dart';
+import 'features/order/cubit/order_ticket_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => InfoAgenCubit()),
         BlocProvider(create: (context) => FleetClassCubit()),
         BlocProvider(create: (context) => SocialMediaCubit()),
+        BlocProvider(create: (context) => OrderHistoryCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

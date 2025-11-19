@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shantika_cubit/features/chat/chat_page.dart';
 import 'package:shantika_cubit/features/home/home_page.dart';
-import 'package:shantika_cubit/features/pesan/pesan_page.dart';
 import 'package:shantika_cubit/features/profile/profile_page.dart';
 import '../../ui/color.dart';
 import '../../ui/typography.dart';
+import '../order/order_list_page.dart';
 import 'cubit/update_fcm_token_cubit.dart';
 
 // ignore: must_be_immutable
@@ -27,7 +27,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     HomePage(),
     // // AllBottomSheet(),
     ChatPage(),
-    PesanPage(),
+    OrderListPage(),
     ProfilePage(),
   ];
 

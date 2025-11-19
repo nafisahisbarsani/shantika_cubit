@@ -18,6 +18,7 @@ import '../../model/response/fleet_class_detail_response.dart';
 import '../../model/response/info_city_response.dart';
 import '../../model/response/notification_response.dart';
 import '../../model/response/notification_set_response.dart';
+import '../../model/response/order_list_response.dart';
 import '../../model/response/privacy_policy_response.dart';
 import '../../model/response/terms_response.dart';
 import '../../model/response/time_classification_response.dart';
@@ -158,7 +159,7 @@ abstract class ApiService {
   });
 
   /// Chat
-  @GET("/agen/chats")
+  @GET("/customer/chats")
   Future<HttpResponse<ApiResponse<List<ChatModel>>>> fetchChats();
 
   /// Notif Setting
@@ -221,6 +222,11 @@ abstract class ApiService {
   /// Social Media
   @GET("/social_media")
   Future<HttpResponse<SocialMediaResponse>> getSocialMedia();
+
+  /// Order History
+  @POST("/customer/riwayat")
+  Future<HttpResponse<OrderListResponse>> getOrderHistory(
+      @Body() Map<String, dynamic> body,);
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

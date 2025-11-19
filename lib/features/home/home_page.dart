@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconly/iconly.dart';
 import 'package:shantika_cubit/features/agen/info_agen_city_page.dart';
-import 'package:shantika_cubit/features/agen/info_agen_dart.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
 import 'package:shantika_cubit/features/fleet/fleet_class_page.dart';
-import 'package:shantika_cubit/features/order_ticket/order_ticket_page.dart';
 import 'package:shantika_cubit/features/social_media/social_media_page.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +19,7 @@ import '../../ui/typography.dart';
 import '../../utility/number_format.dart';
 import '../article/artikel_detail_page.dart';
 import '../notif/notification_page.dart';
+import '../order/order_ticket_page.dart';
 import 'cubit/home_cubit.dart';
 
 class HomePage extends StatelessWidget {
