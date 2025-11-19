@@ -1,6 +1,5 @@
 import '../data/api/api_service.dart';
 import '../model/home_model.dart';
-import '../model/response/api_response.dart';
 import '../utility/resource/data_state.dart';
 import 'base/base_repository.dart';
 

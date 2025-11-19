@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shantika_cubit/features/pesan/detail_pesan_page.dart';
-import 'package:shantika_cubit/features/pesan/riwayat_page.dart';
+import 'package:shantika_cubit/features/order/detail_pesan_page.dart';
+import 'package:shantika_cubit/features/order/order_history_page.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 import '../../ui/shared_widget/custom_card.dart';
 
-class PesanPage extends StatelessWidget {
-  const PesanPage({super.key});
+class OrderListPage extends StatelessWidget {
+  const OrderListPage({super.key});
 
   @override
   @override
@@ -43,7 +43,7 @@ class PesanPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const RiwayatPage()),
+                    MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
                   );
                 },
               ),
