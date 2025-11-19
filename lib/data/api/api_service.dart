@@ -4,6 +4,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:shantika_cubit/model/response/about_us_response.dart';
 import 'package:shantika_cubit/model/response/fleet_response.dart';
 import 'package:shantika_cubit/model/response/info_agen_response.dart';
+import 'package:shantika_cubit/model/response/social_media_response.dart';
 import '../../config/constant.dart';
 import '../../model/chat_model.dart';
 import '../../model/home_model.dart';
@@ -216,6 +217,10 @@ abstract class ApiService {
   Future<HttpResponse<FleetClassDetailResponse>> getFleetClassDetail({
     @Query("fleet_class_id") required int fleetClassId,
   });
+
+  /// Social Media
+  @GET("/social_media")
+  Future<HttpResponse<SocialMediaResponse>> getSocialMedia();
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

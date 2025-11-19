@@ -21,7 +21,13 @@ class FleetClassDetail extends StatelessWidget {
       child: Scaffold(
         backgroundColor: black00,
         body: SingleChildScrollView(
-          child: Column(children: [_buildHeader(), _buildFleetDetail()]),
+          child: Column(
+            children: [
+              _buildHeader(),
+              _buildFleetDetail(),
+              SizedBox(height: 15),
+            ],
+          ),
         ),
       ),
     );
@@ -80,7 +86,7 @@ Widget _buildContent(FleetClassDetailModel fleet) {
 Widget _buildFleetTitle(FleetClassDetailModel fleet) {
   return Padding(
     padding: const EdgeInsets.only(left: 25, right: 20, top: 12),
-    child: Text(fleet.name ?? "Executive Big Top", style: xlBold),
+    child: Text(fleet.name ?? "", style: xlBold),
   );
 }
 
@@ -133,6 +139,14 @@ Widget _buildFacilities(FleetClassDetailModel fleet) {
     return const SizedBox.shrink();
   }
 
+  final topFacilities = facilities.length >= 4
+      ? facilities.sublist(0, 4)
+      : facilities;
+
+  final bottomFacilities = facilities.length > 4
+      ? facilities.sublist(4, facilities.length)
+      : [];
+
   return Padding(
     padding: const EdgeInsets.only(left: 20, right: 20, top: 12),
     child: Column(
@@ -143,21 +157,29 @@ Widget _buildFacilities(FleetClassDetailModel fleet) {
           lineColor: textButtonOutlined,
           textStyle: mdBold,
         ),
+        const SizedBox(height: 12),
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: List.generate(
-            facilities.length > 4 ? 4 : facilities.length,
-            (index) {
-              final facility = facilities[index];
+          children: topFacilities.map((facility) {
+            return Expanded(
+              child: _buildFacilityItem(
+                imageUrl: facility.image,
+                label: facility.name ?? '',
+              ),
+            );
+          }).toList(),
+        ),
+        if (bottomFacilities.isNotEmpty) const SizedBox(height: 12),
+        if (bottomFacilities.isNotEmpty)
+          Row(
+            children: bottomFacilities.map((facility) {
               return Expanded(
                 child: _buildFacilityItem(
                   imageUrl: facility.image,
                   label: facility.name ?? '',
                 ),
               );
-            },
+            }).toList(),
           ),
-        ),
       ],
     ),
   );

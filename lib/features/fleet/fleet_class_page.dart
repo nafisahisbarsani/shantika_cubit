@@ -107,38 +107,34 @@ Widget _buildFleetList() {
                 ),
               ],
               child: Padding(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(10),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            fleet.name ?? "",
-                            style: mdSemiBold.copyWith(color: black950),
-                          ),
-                          const SizedBox(height: space300),
-                          Text(
-                            "Kapasitas: ${fleet.seatCapacity ?? '-'} kursi",
-                            style: smRegular.copyWith(color: black400),
-                          ),
-                        ],
+                      child: Text(
+                        fleet.name ?? "",
+                        style: mdSemiBold.copyWith(color: black950),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
                     ),
+
+                    SizedBox(width: 8),
 
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => FleetClassDetail( fleetClassId: fleet.id!,),
+                            builder: (_) =>
+                                FleetClassDetail(fleetClassId: fleet.id!),
                           ),
                         );
-                      },                      child: Text(
+                      },
+                      child: Text(
                         "Lihat Selengkapnya",
                         style: xsMedium.copyWith(color: black950),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
