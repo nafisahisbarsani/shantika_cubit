@@ -5,6 +5,7 @@ import 'package:iconly/iconly.dart';
 import 'package:shantika_cubit/features/agen/info_agen_city_page.dart';
 import 'package:shantika_cubit/features/article/artikel_page.dart';
 import 'package:shantika_cubit/features/fleet/fleet_class_page.dart';
+import 'package:shantika_cubit/features/order/seat_selection_page.dart';
 import 'package:shantika_cubit/features/social_media/social_media_page.dart';
 import 'package:shantika_cubit/features/testimoni/testimoni_page.dart';
 import 'package:intl/intl.dart';
@@ -305,6 +306,10 @@ Widget _buildMenuView(HomeModel homeData) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const SocialMediaPage()),
+                  );            } else if (menuName.contains("website")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SeatSelectionPage()),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

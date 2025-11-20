@@ -29,6 +29,7 @@ class SelectionBottomSheet<T> extends StatefulWidget {
     this.errorMessage,
     this.onRetry,
     this.showSearch = true,
+
   }) : super(key: key);
 
   @override
@@ -107,18 +108,13 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Text(widget.title, style: smRegular),
+            child: Text(widget.title, style: mdMedium),
           ),
 
           if (widget.showSearch)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: borderNeutralDark),
-                ),
-                child: TextField(
+              child:  TextField(
                   controller: searchController,
                   onChanged: _filterItems,
                   decoration: InputDecoration(
@@ -132,7 +128,7 @@ class _SelectionBottomSheetState<T> extends State<SelectionBottomSheet<T>> {
                     ),
                   ),
                 ),
-              ),
+
             ),
 
           const SizedBox(height: 16),

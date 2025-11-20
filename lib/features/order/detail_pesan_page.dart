@@ -14,16 +14,59 @@ class DetailPesanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black00,
+
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: black00,
+          boxShadow: [
+            BoxShadow(
+              color: black200.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total Pembayaran',
+                  style: xsRegular.copyWith(color: textDarkSecondary),
+                ),
+                Text('Rp380.000', style: mdSemiBold),
+              ],
+            ),
+            const SizedBox(height: 12),
+            CustomButton(
+              onPressed: () {},
+              width: double.infinity,
+              height: 40,
+              child: Text(
+                "Bayar",
+                style: smMedium.copyWith(color: black00),
+              ),
+            ),
+          ],
+        ),
+      ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
             _buildHeader(),
             _buildBusTypes(),
             _buildTravelInformation(),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
+            _buildCustomerData(),
+            const SizedBox(height: 8),
             _buildTravelPayment(),
-            SizedBox(height: 8),
-            _buildBottomSection(),
+            const SizedBox(height: 8),
+            _buildPaymentMethod(),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -48,13 +91,13 @@ class DetailPesanPage extends StatelessWidget {
 
   Widget _buildBusTypes() {
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: CustomCard(
-        borderSide: BorderSide(width: 2, color: black100),
+        borderSide: BorderSide(width: 1, color: black50),
         borderRadius: BorderRadius.circular(borderRadius300),
         shadow: [BoxShadow(color: black100, blurRadius: 2)],
         height: 74,
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         statusColor: borderSurfacePrimary,
         statusText: "2 Penumpang",
         statusTextColor: textPrimary,
@@ -63,7 +106,7 @@ class DetailPesanPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset("assets/images/bus.svg", height: 40, width: 40),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -85,17 +128,17 @@ class DetailPesanPage extends StatelessWidget {
 
   Widget _buildTravelInformation() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: CustomCard(
-        borderSide: BorderSide(width: 2, color: black100),
+        borderSide: BorderSide(width: 1, color: black50),
         borderRadius: BorderRadius.circular(borderRadius300),
         shadow: [BoxShadow(color: black100, blurRadius: 2)],
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Informasi Perjalanan", style: smSemiBold),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             _buildLocationRow(
               iconColor: iconDisabled,
@@ -105,7 +148,7 @@ class DetailPesanPage extends StatelessWidget {
               svgAsset: 'assets/images/ic_maps.svg',
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             _buildLocationRow(
               iconColor: iconDisabled,
@@ -115,7 +158,7 @@ class DetailPesanPage extends StatelessWidget {
               svgAsset: 'assets/images/ic_maps.svg',
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             _buildInfoRow(
               title: "Tanggal Keberangkatan",
@@ -128,19 +171,46 @@ class DetailPesanPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTravelPayment() {
+  Widget _buildCustomerData() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: CustomCard(
-        borderSide: BorderSide(width: 2, color: black100),
+        borderSide: BorderSide(width: 1, color: black50),
         borderRadius: BorderRadius.circular(borderRadius300),
         shadow: [BoxShadow(color: black100, blurRadius: 2)],
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Data Pemesanan", style: smSemiBold),
+            const SizedBox(height: 10),
+            _buildData(
+              name: "test",
+              phone: "12345",
+              seat: "Jumlah Seat (2)",
+              seatNumber: "21, 22",
+              textColor: black950,
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTravelPayment() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomCard(
+        borderSide: BorderSide(width: 1, color: black50),
+        borderRadius: BorderRadius.circular(borderRadius300),
+        shadow: [BoxShadow(color: black100, blurRadius: 2)],
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Informasi Pembayaran", style: smSemiBold),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             _buildPaymentRow(
               iconColor: iconDisabled,
               title: "Total Harga Tiket",
@@ -148,9 +218,9 @@ class DetailPesanPage extends StatelessWidget {
               textColor: textDarkSecondary,
               svgAsset: 'assets/images/ic_money.svg',
               subtitleColor: black950,
-              iconSize: 12
+              iconSize: 12,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             _buildPaymentRow(
               iconColor: iconDisabled,
               title: "ID Membership",
@@ -158,9 +228,8 @@ class DetailPesanPage extends StatelessWidget {
               textColor: textDarkSecondary,
               svgAsset: 'assets/images/profile.svg',
               subtitleColor: black950,
-
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             _buildPaymentRow(
               iconColor: iconDisabled,
               title: "Potongan Membership 5%",
@@ -168,76 +237,39 @@ class DetailPesanPage extends StatelessWidget {
               textColor: textDarkSecondary,
               svgAsset: 'assets/images/ic_percent.svg',
               subtitleColor: black950,
-
             ),
-            SizedBox(height: 10),
-            _buildPaymentRow(
-              iconColor: iconDisabled,
-              title: "Metode Pembayaran",
-              subtitle: "Pembayaran Instant",
-              textColor: textDarkSecondary,
-              svgAsset: 'assets/images/ic_wallet.svg',
-              subtitleColor: black950,
-
-            ),
-            SizedBox(height: 10),
-            _buildPaymentRow(
-              iconColor: iconDisabled,
-              title: "Status",
-              subtitle: "Lunas",
-              subtitleColor: textSuccess,
-              textColor: textDarkSecondary,
-              svgAsset: 'assets/images/ic_wallet.svg',
-            ),
-            SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBottomSection() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: black00,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(borderRadius500),
-          topRight: Radius.circular(borderRadius500),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(20),
-            child: Column(
+  Widget _buildPaymentMethod() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomCard(
+        borderSide: BorderSide(width: 1, color: black50),
+        borderRadius: BorderRadius.circular(borderRadius300),
+        shadow: [BoxShadow(color: black100, blurRadius: 2)],
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Metode Pembayaran", style: smSemiBold),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total Pembayaran',
-                      style: xsRegular.copyWith(color: textDarkSecondary),
-                    ),
-                    Text('Rp380.000', style: mdSemiBold),
-                  ],
+                Text(
+                  "Pilih Metode Pembayaran",
+                  style: smRegular.copyWith(color: primaryColor),
                 ),
-                SizedBox(height: 12),
-                CustomButton(
-                  onPressed: () {},
-                  width: 372,
-                  height: 40,
-                  child: Text(
-                    "Lihat Tiket",
-                    style: smMedium.copyWith(color: black00),
-                  ),
-                ),
+                Icon(Icons.keyboard_arrow_right_rounded,
+                    color: iconDarkSecondary),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -252,12 +284,7 @@ class DetailPesanPage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SvgPicture.asset(
-          svgAsset,
-          width: 16,
-          height: 16,
-          color: iconColor,
-        ),
+        SvgPicture.asset(svgAsset, width: 16, height: 16, color: iconColor),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
@@ -279,7 +306,6 @@ class DetailPesanPage extends StatelessWidget {
     );
   }
 
-
   Widget _buildInfoRow({
     required String svgAsset,
     required String title,
@@ -288,12 +314,7 @@ class DetailPesanPage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SvgPicture.asset(
-          svgAsset,
-          width: 16,
-          height: 16,
-          color: iconDisabled,
-        ),
+        SvgPicture.asset(svgAsset, width: 16, height: 16, color: iconDisabled),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
@@ -309,39 +330,76 @@ class DetailPesanPage extends StatelessWidget {
     );
   }
 
-}
+  Widget _buildPaymentRow({
+    required String svgAsset,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required Color textColor,
+    Color? subtitleColor,
+    double iconSize = 16,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SvgPicture.asset(
+          svgAsset,
+          width: iconSize,
+          height: iconSize,
+          color: iconColor,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: xsRegular.copyWith(color: textDarkSecondary)),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: smMedium.copyWith(color: subtitleColor ?? textColor),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
-Widget _buildPaymentRow({
-  required String svgAsset,
-  required Color iconColor,
-  required String title,
-  required String subtitle,
-  required Color textColor,
-  Color? subtitleColor,
-  double iconSize = 16,
-}) {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SvgPicture.asset(
-        svgAsset,
-        width: iconSize,
-        height: iconSize,
-        color: iconColor,
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: Column(
+  Widget _buildData({
+    required String name,
+    required String phone,
+    required String seat,
+    required String seatNumber,
+    required Color textColor,
+    Color? subtitleColor,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(width: 8),
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: xsRegular.copyWith(color: textDarkSecondary)),
+            Text(
+              name,
+              style: smMedium.copyWith(color: subtitleColor ?? textColor),
+            ),
             const SizedBox(height: 4),
-            Text(subtitle, style: smMedium.copyWith(color: subtitleColor ?? textColor)),
+            Text(phone, style: xsRegular.copyWith(color: textDarkSecondary)),
+            const SizedBox(height: 16),
+            Text(
+              seat,
+              style: smMedium.copyWith(color: subtitleColor ?? textColor),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              seatNumber,
+              style: xsRegular.copyWith(color: textDarkSecondary),
+            ),
           ],
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }
-
-
