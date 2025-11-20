@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shantika_cubit/features/order/list_armada_page.dart';
 import 'package:shantika_cubit/model/city_model.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/typography.dart';
@@ -52,7 +53,14 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
           padding: const EdgeInsets.all(20),
           child: CustomButton(
             child: Text("Cari", style: mdMedium.copyWith(color: black00)),
-            onPressed: isFormComplete ? () {} : null,
+            onPressed: isFormComplete
+                ? () {// Add this
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => ListArmadaPage()),
+                    );
+                  }
+                : null,
             backgroundColor: isFormComplete
                 ? jacarta800
                 : bgButtonContainedDisabled,
