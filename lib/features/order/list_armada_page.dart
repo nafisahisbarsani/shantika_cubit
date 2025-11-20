@@ -1,15 +1,35 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:shantika_cubit/ui/color.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shantika_cubit/features/order/seat_selection_page.dart';
+import '../../ui/color.dart';
 import '../../ui/dimension.dart';
 import '../../ui/shared_widget/custom_arrow.dart';
 import '../../ui/shared_widget/custom_card.dart';
+import '../../ui/shared_widget/sheet/custom_bottom_sheet.dart';
 import '../../ui/typography.dart';
 
 class ListArmadaPage extends StatelessWidget {
   const ListArmadaPage({super.key});
 
-  // Sample data for the list
+  final List<Map<String, dynamic>> armadaStops = const [
+    {"city": "Semarang", "stop": "Krapyak", "time": "05:30", "isMain": true},
+    {"city": "Semarang", "stop": "Ungaran", "time": "05:30", "isMain": false},
+    {
+      "city": "Semarang",
+      "stop": "Terminal Bawen",
+      "time": "05:30",
+      "isMain": false,
+    },
+    {"city": "Magelang", "stop": "Muntilan", "time": "05:30", "isMain": false},
+    {
+      "city": "Magelang",
+      "stop": "Terminal Magelang",
+      "time": "05:30",
+      "isMain": false,
+    },
+  ];
   final List<Map<String, dynamic>> fleetList = const [
     {
       'busName': 'Bus 10',
@@ -55,12 +75,13 @@ class ListArmadaPage extends StatelessWidget {
           _buildHeader(),
           _buildRoutes(),
           _buildFilters(),
+
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               itemCount: fleetList.length,
               itemBuilder: (context, index) {
-                return _buildListFleet(fleetList[index]);
+                return _buildListFleet(context, fleetList[index]);
               },
             ),
           ),
@@ -81,7 +102,7 @@ class ListArmadaPage extends StatelessWidget {
       padding: EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 6),
       child: Row(
         children: [
-          SvgPicture.asset("assets/images/ic_maps.svg",),
+          SvgPicture.asset("assets/images/ic_maps.svg"),
           SizedBox(width: 4),
           Text("Amsilati - Jepara", style: smMedium),
         ],
@@ -111,11 +132,10 @@ class ListArmadaPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: borderNeutralLight, width: 1),
+        border: Border.all(color: borderNeutralLight),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Text(text, style: smRegular),
           SizedBox(width: 6),
@@ -125,9 +145,10 @@ class ListArmadaPage extends StatelessWidget {
     );
   }
 
-  Widget _buildListFleet(Map<String, dynamic> data) {
+  Widget _buildListFleet(BuildContext context, Map<String, dynamic> data) {
     return Padding(
       padding: EdgeInsets.only(bottom: 16),
+
       child: CustomCard(
         borderSide: BorderSide(width: 2, color: black50),
         borderRadius: BorderRadius.circular(borderRadius300),
@@ -137,6 +158,37 @@ class ListArmadaPage extends StatelessWidget {
         statusText: "Sisa ${data['seatsLeft']}",
         statusTextColor: textDanger,
         statusIcon: "assets/images/seat.svg",
+        onTap: () {
+          final parentContext = context;
+
+          showModalBottomSheet(
+            context: parentContext,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (sheetContext) {
+              return SelectionBottomSheet<Map<String, dynamic>>(
+                title: "Pilih Armada",
+                items: armadaStops,
+                searchHint: "Cari Armada",
+
+                getItemName: (item) =>
+                    "${item['city']} - ${item['stop']} (${item['time']})",
+
+                getItemId: (item) =>
+                    "${item['city']}_${item['stop']}_${item['time']}",
+
+                onItemSelected: (item) {
+                  Navigator.pop(sheetContext);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => SeatSelectionPage()),
+                  );
+                },
+              );
+            },
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
