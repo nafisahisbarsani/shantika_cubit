@@ -8,6 +8,7 @@ import 'package:shantika_cubit/model/response/social_media_response.dart';
 import '../../config/constant.dart';
 import '../../model/chat_model.dart';
 import '../../model/home_model.dart';
+import '../../model/response/agency_by_city_response.dart';
 import '../../model/response/agency_response.dart';
 import '../../model/response/api_response.dart';
 import '../../model/response/article_detail_response.dart';
@@ -191,7 +192,7 @@ abstract class ApiService {
 
   /// Agencies by City
   @GET("/agency_city")
-  Future<HttpResponse<AgencyResponse>> getAgenciesByCity(
+  Future<HttpResponse<AgencyResponse>> getAgenciesWithCity(
     @Query("city_id") int cityId,
   );
 
@@ -226,7 +227,22 @@ abstract class ApiService {
   /// Order History
   @POST("/customer/riwayat")
   Future<HttpResponse<OrderListResponse>> getOrderHistory(
-      @Body() Map<String, dynamic> body,);
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Available Fleet Classes
+  @GET("/fleet_classes/available")
+  Future<HttpResponse<FleetResponse>> getAvailableFleets({
+    @Query("agency_id") required int agencyId,
+    @Query("time_classification_id") required int timeClassificationId,
+    @Query("date") required String date,
+    @Query("agency_departure_id") required int agencyDepartureId,
+  });
+
+  @GET("/agencies")
+  Future<HttpResponse<AgencyByCityResponse>> getAgenciesWithCity(
+    @Query("city_id") int cityId,
+  );
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")

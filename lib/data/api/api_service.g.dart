@@ -698,7 +698,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<AgencyResponse>> getAgenciesByCity(int cityId) async {
+  Future<HttpResponse<AgencyResponse>> getAgenciesWithCity(int cityId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'city_id': cityId};
     final _headers = <String, dynamic>{};
@@ -921,6 +921,74 @@ class _ApiService implements ApiService {
     late OrderListResponse _value;
     try {
       _value = OrderListResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<FleetResponse>> getAvailableFleets({
+    required int agencyId,
+    required int timeClassificationId,
+    required String date,
+    required int agencyDepartureId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'agency_id': agencyId,
+      r'time_classification_id': timeClassificationId,
+      r'date': date,
+      r'agency_departure_id': agencyDepartureId,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<FleetResponse>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/fleet_classes/available',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late FleetResponse _value;
+    try {
+      _value = FleetResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AgencyByCityResponse>> getAgenciesWithCity(
+    int cityId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'city_id': cityId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<AgencyByCityResponse>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/agencies',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AgencyByCityResponse _value;
+    try {
+      _value = AgencyByCityResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
