@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shantika_cubit/features/order/seat_selection_page.dart';
+import 'package:shantika_cubit/ui/shared_widget/custom_bottom.dart';
 import '../../ui/color.dart';
 import '../../ui/dimension.dart';
 import '../../ui/shared_widget/custom_arrow.dart';
@@ -70,22 +69,23 @@ class ListArmadaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: black00,
-      body: Column(
-        children: [
-          _buildHeader(),
-          _buildRoutes(),
-          _buildFilters(),
-
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildHeader(),
+            _buildRoutes(),
+            _buildFilters(),
+            ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               itemCount: fleetList.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return _buildListFleet(context, fleetList[index]);
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -158,36 +158,18 @@ class ListArmadaPage extends StatelessWidget {
         statusText: "Sisa ${data['seatsLeft']}",
         statusTextColor: textDanger,
         statusIcon: "assets/images/seat.svg",
-        onTap: () {
-          final parentContext = context;
-
-          showModalBottomSheet(
-            context: parentContext,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (sheetContext) {
-              return SelectionBottomSheet<Map<String, dynamic>>(
-                title: "Pilih Armada",
-                items: armadaStops,
-                searchHint: "Cari Armada",
-
-                getItemName: (item) =>
-                    "${item['city']} - ${item['stop']} (${item['time']})",
-
-                getItemId: (item) =>
-                    "${item['city']}_${item['stop']}_${item['time']}",
-
-                onItemSelected: (item) {
-                  Navigator.pop(sheetContext);
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => SeatSelectionPage()),
-                  );
-                },
-              );
-            },
+        onTap: () async {
+          final selectedStop = await context.showArmadaStopPicker(
+            title: "Pilih Armada",
+            stops: armadaStops,
           );
+
+          if (selectedStop != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => SeatSelectionPage()),
+            );
+          }
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

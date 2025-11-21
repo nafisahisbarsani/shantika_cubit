@@ -41,7 +41,7 @@ class OrderTicketRepository extends BaseRepository {
 
   Future<DataState<List<AgencyModel>>> getAgenciesByCity(int cityId) async {
     DataState<AgencyResponse> dataState = await getStateOf<AgencyResponse>(
-      request: () => _apiService.getAgenciesByCity(cityId),
+      request: () => _apiService.getAgenciesWithCity(cityId),
     );
 
     if (dataState is DataStateSuccess) {
@@ -65,9 +65,19 @@ class OrderTicketRepository extends BaseRepository {
     }
   }
 
-  Future<DataState<List<FleetModel>>> getFleetClasses() async {
+  Future<DataState<List<FleetModel>>> getAvailableFleets({
+    required int agencyId,
+    required int timeClassificationId,
+    required String date,
+    required int agencyDepartureId,
+  }) async {
     DataState<FleetResponse> dataState = await getStateOf<FleetResponse>(
-      request: () => _apiService.getFleet(),
+      request: () => _apiService.getAvailableFleets(
+        agencyId: agencyId,
+        timeClassificationId: timeClassificationId,
+        date: date,
+        agencyDepartureId: agencyDepartureId,
+      ),
     );
 
     if (dataState is DataStateSuccess) {
