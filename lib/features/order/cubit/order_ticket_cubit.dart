@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shantika_cubit/model/available_routes_model.dart';
 import 'package:shantika_cubit/utility/extensions/dio_exception_extensions.dart';
 import '../../../config/service_locator.dart';
+import '../../../model/agency_by_city_model.dart';
 import '../../../model/agency_model.dart';
 import '../../../model/city_model.dart';
 import '../../../model/fleet_model.dart';
@@ -64,11 +66,11 @@ class OrderTicketCubit extends Cubit<OrderTicketState> {
     }
   }
 
-  Future<void> fetchAgenciesByCity(int cityId) async {
+  Future<void> fetchAgenciesWithCity(int cityId) async {
     emit(OrderTicketLoading());
 
     final DataState<List<AgencyModel>> dataState = await _orderTicketRepository
-        .getAgenciesByCity(cityId);
+        .getAgenciesWithCity(cityId);
 
     switch (dataState) {
       case DataStateSuccess<List<AgencyModel>>():
@@ -79,6 +81,29 @@ class OrderTicketCubit extends Cubit<OrderTicketState> {
           emit(OrderTicketAgencyData(agencies: agencies));
         }
       case DataStateError<List<AgencyModel>>():
+        emit(
+          OrderTicketError(
+            message: dataState.exception?.parseMessage() ?? "Terjadi kesalahan",
+          ),
+        );
+    }
+  }
+
+  Future<void> fetchAgencyByCity(int cityId) async {
+    emit(OrderTicketLoading());
+
+    final DataState<List<AgencyByCityModel>> dataState =
+        await _orderTicketRepository.getAgencyByCity(cityId);
+
+    switch (dataState) {
+      case DataStateSuccess<List<AgencyByCityModel>>():
+        final agencies = dataState.data ?? [];
+        if (agencies.isEmpty) {
+          emit(OrderTicketEmpty());
+        } else {
+          emit(OrderTicketAgencyByCityData(agencies: agencies));
+        }
+      case DataStateError<List<AgencyByCityModel>>():
         emit(
           OrderTicketError(
             message: dataState.exception?.parseMessage() ?? "Terjadi kesalahan",
@@ -134,6 +159,43 @@ class OrderTicketCubit extends Cubit<OrderTicketState> {
             message: dataState.exception?.parseMessage() ?? "Terjadi kesalahan",
           ),
         );
+    }
+  }
+
+  Future<List<AvailableRoutesModel>?> fetchAvailableRoutes({
+    required int fleetClassId,
+    required int agencyDepartureId,
+    required int agencyArrivedId,
+    required int timeClassificationId,
+    required String date,
+  }) async {
+    emit(OrderTicketLoading());
+
+    final dataState = await _orderTicketRepository.getAvailableRoutes(
+      fleetClassId: fleetClassId,
+      agencyDepartureId: agencyDepartureId,
+      agencyArrivedId: agencyArrivedId,
+      timeClassificationId: timeClassificationId,
+      date: date,
+    );
+
+    switch (dataState) {
+      case DataStateSuccess<List<AvailableRoutesModel>>():
+        final routes = dataState.data ?? [];
+        if (routes.isEmpty) {
+          emit(OrderTicketEmpty());
+        } else {
+          emit(OrderTicketRoutesData(routes: routes));
+        }
+        return routes;
+
+      case DataStateError<List<AvailableRoutesModel>>():
+        emit(
+          OrderTicketError(
+            message: dataState.exception?.parseMessage() ?? "Terjadi kesalahan",
+          ),
+        );
+        return null;
     }
   }
 }

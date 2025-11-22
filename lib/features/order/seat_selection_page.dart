@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shantika_cubit/features/order/detail_pesan_page.dart';
+import 'package:shantika_cubit/features/order/order_detail_page.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
 import 'package:shantika_cubit/ui/shared_widget/custom_button.dart';
@@ -531,7 +531,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
             onSubmit: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => DetailPesanPage()),
+                MaterialPageRoute(builder: (_) => OrderDetailPage()),
               );
             },
           ),

@@ -46,3 +46,20 @@ final class OrderTicketFleetData extends OrderTicketState {
   @override
   List<Object?> get props => [fleetClasses];
 }
+
+final class OrderTicketAgencyByCityData extends OrderTicketState {
+  final List<AgencyByCityModel> agencies;
+
+  OrderTicketAgencyByCityData({required this.agencies});
+
+  @override
+  List<Object?> get props => [agencies];
+}
+final class OrderTicketRoutesData extends OrderTicketState {
+  final List<AvailableRoutesModel> routes;
+
+  OrderTicketRoutesData({required this.routes});
+
+  @override
+  List<Object?> get props => [routes];
+}

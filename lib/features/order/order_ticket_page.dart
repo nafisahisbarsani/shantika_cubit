@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shantika_cubit/features/order/list_armada_page.dart';
+import 'package:shantika_cubit/features/order/list_fleet_page.dart';
 import 'package:shantika_cubit/model/city_model.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/typography.dart';
 import 'package:shantika_cubit/utility/extensions/date_time_extensions.dart';
+import '../../model/agency_by_city_model.dart';
 import '../../model/agency_model.dart';
 import '../../model/fleet_model.dart';
 import '../../model/time_classification_model.dart';
@@ -24,15 +25,15 @@ class OrderTicketPage extends StatefulWidget {
 
 class _OrderTicketPageState extends State<OrderTicketPage> {
   CityModel? selectedDepartureCity;
-  CityModel? selectedDestinationCity;
   AgencyModel? selectedAgency;
   DateTime? selectedDate;
   TimeClassificationModel? selectedTimeClassification;
   FleetModel? selectedFleetClass;
+  AgencyByCityModel? selectedAgencyDestination;
   bool get isFormComplete {
     return selectedDepartureCity != null &&
-        selectedDestinationCity != null &&
         selectedAgency != null &&
+        selectedAgencyDestination != null &&
         selectedDate != null &&
         selectedTimeClassification != null &&
         selectedFleetClass != null;
@@ -54,11 +55,42 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
           child: CustomButton(
             child: Text("Cari", style: mdMedium.copyWith(color: black00)),
             onPressed: isFormComplete
-                ? () {// Add this
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => ListArmadaPage()),
+                ? () async {
+                    final fleetClassId = selectedFleetClass!.id!;
+                    final departureId = selectedAgency!.id!;
+                    final arrivedId = selectedAgencyDestination!.id!;
+                    final timeClassificationId =
+                        selectedTimeClassification!.id!;
+                    final date = selectedDate!.toIso8601String().split(
+                      'T',
+                    )[0]; // yyyy-MM-dd
+
+                    final cubit = context.read<OrderTicketCubit>();
+                    final routes = await cubit.fetchAvailableRoutes(
+                      fleetClassId: fleetClassId,
+                      agencyDepartureId: departureId,
+                      agencyArrivedId: arrivedId,
+                      timeClassificationId: timeClassificationId,
+                      date: date,
                     );
+
+                    if (routes != null && routes.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ListFleetPage(
+                            routes: routes,
+                            selectedDate: selectedDate!,
+                          ),
+                         ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Tidak ada armada tersedia"),
+                        ),
+                      );
+                    }
                   }
                 : null,
             backgroundColor: isFormComplete
@@ -134,23 +166,27 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
           ),
           const SizedBox(height: 20),
           CustomTextField(
-            hintText: selectedDestinationCity?.name ?? "Pilih Tempat Tujuan",
+            hintText:
+                selectedAgencyDestination?.agencyName ?? "Pilih Tempat Tujuan",
             hintColor: textDarkTertiary,
-            title: "Kota Tujuan",
+            title: "Tujuan",
             titleColor: black950,
-            prefixSvg: "assets/images/ic_maps.svg",
+            prefixSvg: "assets/images/ic_agen.svg",
             readOnly: true,
-            onTap: () => _showCityBottomSheet(
-              context: context,
-              title: 'Pilih Tempat Tujuan',
-              selectedCity: selectedDestinationCity,
-              onSelected: (city) {
-                setState(() {
-                  selectedDestinationCity = city;
-                });
-              },
-            ),
+            onTap: selectedDepartureCity != null
+                ? () => _showAgencyDestinationBottomSheet(
+                    context: context,
+                    cityId: selectedDepartureCity!.id!,
+                    selectedAgency: selectedAgencyDestination,
+                    onSelected: (agency) {
+                      setState(() {
+                        selectedAgencyDestination = agency;
+                      });
+                    },
+                  )
+                : null,
           ),
+
           const SizedBox(height: 20),
           Row(
             children: [
@@ -299,7 +335,7 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
     required Function(AgencyModel) onSelected,
   }) {
     final cubit = context.read<OrderTicketCubit>();
-    cubit.fetchAgenciesByCity(cityId);
+    cubit.fetchAgenciesWithCity(cityId);
 
     showModalBottomSheet(
       context: context,
@@ -334,7 +370,58 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
                 searchHint: 'Cari Agen',
                 isLoading: isLoading,
                 errorMessage: errorMessage,
-                onRetry: () => cubit.fetchAgenciesByCity(cityId),
+                onRetry: () => cubit.fetchAgenciesWithCity(cityId),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showAgencyDestinationBottomSheet({
+    required BuildContext context,
+    required int cityId,
+    required AgencyByCityModel? selectedAgency,
+    required Function(AgencyByCityModel) onSelected,
+  }) {
+    final cubit = context.read<OrderTicketCubit>();
+    cubit.fetchAgencyByCity(cityId);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) {
+        return BlocBuilder<OrderTicketCubit, OrderTicketState>(
+          builder: (context, state) {
+            List<AgencyByCityModel> agencies = [];
+            bool isLoading = false;
+            String? errorMessage;
+
+            if (state is OrderTicketLoading) {
+              isLoading = true;
+            } else if (state is OrderTicketError) {
+              errorMessage = state.message;
+            } else if (state is OrderTicketAgencyByCityData) {
+              agencies = state.agencies;
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SelectionBottomSheet<AgencyByCityModel>(
+                title: "Pilih Tempat Tujuan",
+                items: agencies,
+                selectedItem: selectedAgency,
+                onItemSelected: onSelected,
+                getItemName: (agency) => agency.agencyName ?? '',
+                getItemId: (agency) => agency.id?.toString() ?? '',
+                searchHint: 'Cari Tempat Tujuan',
+                isLoading: isLoading,
+                errorMessage: errorMessage,
+                onRetry: () => cubit.fetchAgencyByCity(cityId),
               ),
             );
           },

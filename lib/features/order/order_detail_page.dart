@@ -9,14 +9,14 @@ import '../../ui/shared_widget/custom_card.dart';
 import '../../ui/shared_widget/payment_method_bottom_sheet.dart';
 import '../../ui/shared_widget/sheet/custom_bottom_sheet.dart';
 
-class DetailPesanPage extends StatefulWidget {
-  const DetailPesanPage({super.key});
+class OrderDetailPage extends StatefulWidget {
+  const OrderDetailPage({super.key});
 
   @override
-  State<DetailPesanPage> createState() => _DetailPesanPageState();
+  State<OrderDetailPage> createState() => _OrderDetailPageState();
 }
 
-class _DetailPesanPageState extends State<DetailPesanPage> {
+class _OrderDetailPageState extends State<OrderDetailPage> {
   String? selectedPaymentMethod;
 
   @override

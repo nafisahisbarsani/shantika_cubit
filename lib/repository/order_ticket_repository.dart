@@ -1,8 +1,13 @@
+import 'package:shantika_cubit/model/available_routes_model.dart';
+
 import '../data/api/api_service.dart';
+import '../model/agency_by_city_model.dart';
 import '../model/agency_model.dart';
 import '../model/city_model.dart';
 import '../model/fleet_model.dart';
+import '../model/response/agency_by_city_response.dart';
 import '../model/response/agency_response.dart';
+import '../model/response/available_routes_response.dart';
 import '../model/response/city_response.dart';
 import '../model/response/fleet_response.dart';
 import '../model/response/time_classification_response.dart';
@@ -39,13 +44,26 @@ class OrderTicketRepository extends BaseRepository {
     }
   }
 
-  Future<DataState<List<AgencyModel>>> getAgenciesByCity(int cityId) async {
+  Future<DataState<List<AgencyModel>>> getAgenciesWithCity(int cityId) async {
     DataState<AgencyResponse> dataState = await getStateOf<AgencyResponse>(
       request: () => _apiService.getAgenciesWithCity(cityId),
     );
 
     if (dataState is DataStateSuccess) {
       return DataStateSuccess(dataState.data?.agenciesCity ?? []);
+    } else {
+      return DataStateError(dataState.exception!);
+    }
+  }
+
+  Future<DataState<List<AgencyByCityModel>>> getAgencyByCity(int cityId) async {
+    DataState<AgencyByCityResponse> dataState =
+        await getStateOf<AgencyByCityResponse>(
+          request: () => _apiService.getAgencyByCity(cityId),
+        );
+
+    if (dataState is DataStateSuccess) {
+      return DataStateSuccess(dataState.data?.agencies ?? []);
     } else {
       return DataStateError(dataState.exception!);
     }
@@ -82,6 +100,43 @@ class OrderTicketRepository extends BaseRepository {
 
     if (dataState is DataStateSuccess) {
       return DataStateSuccess(dataState.data?.fleetClasses ?? []);
+    } else {
+      return DataStateError(dataState.exception!);
+    }
+  }
+
+  Future<DataState<List<FleetModel>>> getFleetClasses() async {
+    DataState<FleetResponse> dataState = await getStateOf<FleetResponse>(
+      request: () => _apiService.getFleet(),
+    );
+
+    if (dataState is DataStateSuccess) {
+      return DataStateSuccess(dataState.data?.fleetClasses ?? []);
+    } else {
+      return DataStateError(dataState.exception!);
+    }
+  }
+
+  Future<DataState<List<AvailableRoutesModel>>> getAvailableRoutes({
+    required int fleetClassId,
+    required int agencyDepartureId,
+    required int agencyArrivedId,
+    required int timeClassificationId,
+    required String date, // format: yyyy-MM-dd
+  }) async {
+    DataState<AvailableRoutesResponse> dataState =
+        await getStateOf<AvailableRoutesResponse>(
+          request: () => _apiService.getAvailableRoutes(
+            fleetClassId: fleetClassId,
+            agencyDepartureId: agencyDepartureId,
+            agencyArrivedId: agencyArrivedId,
+            timeClassificationId: timeClassificationId,
+            date: date,
+          ),
+        );
+
+    if (dataState is DataStateSuccess) {
+      return DataStateSuccess(dataState.data?.routes ?? []);
     } else {
       return DataStateError(dataState.exception!);
     }
