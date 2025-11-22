@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shantika_cubit/features/order/detail_pesan_page.dart';
+import 'package:shantika_cubit/features/order/order_detail_page.dart';
 import 'package:shantika_cubit/features/order/order_history_page.dart';
 import 'package:shantika_cubit/ui/color.dart';
 import 'package:shantika_cubit/ui/dimension.dart';
@@ -104,7 +104,7 @@ class OrderListPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => DetailPesanPage(),
+                  builder: (_) => OrderDetailPage(),
                 ),
               );
             },

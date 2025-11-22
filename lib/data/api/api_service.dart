@@ -13,6 +13,7 @@ import '../../model/response/agency_response.dart';
 import '../../model/response/api_response.dart';
 import '../../model/response/article_detail_response.dart';
 import '../../model/response/auth_response.dart';
+import '../../model/response/available_routes_response.dart';
 import '../../model/response/city_response.dart';
 import '../../model/response/faq_response.dart';
 import '../../model/response/fleet_class_detail_response.dart';
@@ -240,9 +241,18 @@ abstract class ApiService {
   });
 
   @GET("/agencies")
-  Future<HttpResponse<AgencyByCityResponse>> getAgenciesWithCity(
+  Future<HttpResponse<AgencyByCityResponse>> getAgencyByCity(
     @Query("city_id") int cityId,
   );
+
+  @GET("/customer/routes/available")
+  Future<HttpResponse<AvailableRoutesResponse>> getAvailableRoutes({
+    @Query("fleet_class_id") required int fleetClassId,
+    @Query("agency_departure_id") required int agencyDepartureId,
+    @Query("agency_arrived_id") required int agencyArrivedId,
+    @Query("time_classification_id") required int timeClassificationId,
+    @Query("date") required String date,
+  });
 
   // /// Memberi Laiks
   // @POST("/article/{slug}/review")
