@@ -20,19 +20,38 @@ class SeatSelectionPage extends StatefulWidget {
 class _SeatSelectionPageState extends State<SeatSelectionPage> {
   Set<String> selectedSeats = {};
   int seatPriceRegular = 125000;
+  int seatPriceFirstClass = 205000;
   bool isExpanded = false;
   bool isLowerSelected = true;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
-  int get totalPrice => selectedSeats.length * seatPriceRegular;
+  final Set<String> firstClassSeats = {'21', '22', '23', '24', '27'};
+
+  int get totalPrice {
+    int total = 0;
+    for (String seat in selectedSeats) {
+      if (firstClassSeats.contains(seat)) {
+        total += seatPriceFirstClass;
+      } else {
+        total += seatPriceRegular;
+      }
+    }
+    return total;
+  }
+
+  int get regularSeatsCount =>
+      selectedSeats.where((seat) => !firstClassSeats.contains(seat)).length;
+
+  int get firstClassSeatsCount =>
+      selectedSeats.where((seat) => firstClassSeats.contains(seat)).length;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgSurfaceNeutralLight,
-
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -43,7 +62,6 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
           ],
         ),
       ),
-
       bottomNavigationBar: selectedSeats.isEmpty
           ? _buildNormalBottomButton()
           : _buildPriceBottomPanel(),
@@ -212,7 +230,6 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
     );
   }
 
-  // Replace your _buildSeatPlan method with this:
   Widget _buildSeatPlan() {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -225,7 +242,6 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
     );
   }
 
-  // Lower deck layout (existing)
   Widget _buildLowerDeckSeats() {
     return Column(
       children: [
@@ -362,12 +378,17 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
     bool isUnavailable = seatNumber.startsWith('X');
     String displayNumber = isUnavailable ? seatNumber.substring(1) : seatNumber;
     bool isSelected = selectedSeats.contains(seatNumber);
+    bool isFirstClass = firstClassSeats.contains(seatNumber);
 
     String assetPath;
     if (isUnavailable) {
       assetPath = "assets/images/ic_seat_unavailable.svg";
+    } else if (isSelected && isFirstClass) {
+      assetPath = "assets/images/ic_seat_first_class_selected.svg";
     } else if (isSelected) {
       assetPath = "assets/images/ic_seat_selected.svg";
+    } else if (isFirstClass) {
+      assetPath = "assets/images/ic_seat_vip.svg";
     } else {
       assetPath = "assets/images/ic_seat_regular.svg";
     }
@@ -442,7 +463,6 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                   "Detail Harga",
                   style: smRegular.copyWith(color: textDarkTertiary),
                 ),
-
                 Row(
                   children: [
                     Text(
@@ -461,28 +481,43 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
               ],
             ),
           ),
-
           if (isExpanded) ...[
             const SizedBox(height: 10),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "${selectedSeats.length}x Default",
-                  style: xsRegular.copyWith(color: textDarkTertiary),
-                ),
-                Text(
-                  NumberFormatter.rupiah(
-                    seatPriceRegular * selectedSeats.length,
+            if (regularSeatsCount > 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${regularSeatsCount}x Reguler",
+                    style: xsRegular.copyWith(color: textDarkTertiary),
                   ),
-                  style: smSemiBold.copyWith(color: jacarta800),
-                ),
-              ],
-            ),
-
+                  Text(
+                    NumberFormatter.rupiah(
+                      seatPriceRegular * regularSeatsCount,
+                    ),
+                    style: smSemiBold.copyWith(color: jacarta800),
+                  ),
+                ],
+              ),
+            if (regularSeatsCount > 0 && firstClassSeatsCount > 0)
+              const SizedBox(height: 8),
+            if (firstClassSeatsCount > 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${firstClassSeatsCount}x First Class",
+                    style: xsRegular.copyWith(color: textDarkTertiary),
+                  ),
+                  Text(
+                    NumberFormatter.rupiah(
+                      seatPriceFirstClass * firstClassSeatsCount,
+                    ),
+                    style: smSemiBold.copyWith(color: jacarta800),
+                  ),
+                ],
+              ),
             const SizedBox(height: 12),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -496,12 +531,9 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                 ),
               ],
             ),
-
             const SizedBox(height: 20),
           ],
-
           const SizedBox(height: 20),
-
           CustomButton(
             onPressed: _showBookingForm,
             child: Text("Pesan", style: mdMedium.copyWith(color: black00)),

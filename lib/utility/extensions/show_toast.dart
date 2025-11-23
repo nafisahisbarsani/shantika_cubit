@@ -7,7 +7,6 @@ import '../../ui/dimension.dart';
 import '../../ui/shared_widget/custom_card_secondary.dart';
 import '../../ui/typography.dart';
 
-
 extension ToastExtension on BuildContext {
   void showCustomToast({
     required String title,
@@ -27,13 +26,6 @@ extension ToastExtension on BuildContext {
           left: 16,
           right: 16,
           top: kToolbarHeight,
-        ),
-        animation: CurvedAnimation(
-          parent: AnimationController(
-            vsync: Scaffold.of(this),
-            duration: const Duration(milliseconds: 300),
-          )..forward(),
-          curve: Curves.easeOut,
         ),
         content: CustomCardSecondary(
           useShadow: false,
@@ -56,7 +48,7 @@ extension ToastExtension on BuildContext {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SvgPicture.asset('assets/images/ic_info.svg', color: isSuccess ? iconInfo : iconDanger),
-                   SizedBox(width: space200),
+                  SizedBox(width: space200),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,

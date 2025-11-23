@@ -18,6 +18,8 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   String? selectedPaymentMethod;
+  String? selectedPaymentDescription;
+  bool isCustomerDataExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -131,18 +133,172 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   Widget _buildTravelInformation() {
-    // Your existing implementation
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomCard(
+        borderSide: BorderSide(width: 1, color: black50),
+        borderRadius: BorderRadius.circular(borderRadius300),
+        shadow: [BoxShadow(color: black100, blurRadius: 2)],
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Informasi Perjalanan", style: smSemiBold),
+            const SizedBox(height: 16),
+
+            _buildLocationRow(
+              iconColor: iconDisabled,
+              title: "Agen Keberangkatan",
+              location: "Krapyak - Semarang",
+              time: "• 18:30",
+              svgAsset: 'assets/images/ic_maps.svg',
+            ),
+
+            const SizedBox(height: 16),
+
+            _buildLocationRow(
+              iconColor: iconDisabled,
+              title: "Agen Tujuan",
+              location: "Gejayan - Sieman",
+              time: "• 18:30",
+              svgAsset: 'assets/images/ic_maps.svg',
+            ),
+
+            const SizedBox(height: 16),
+
+            _buildInfoRow(
+              title: "Tanggal Keberangkatan",
+              value: "20 Jan 2025 - 07:40",
+              svgAsset: 'assets/images/ic_calender.svg',
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildCustomerData() {
-    // Your existing implementation
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomCard(
+        borderSide: BorderSide(width: 1, color: black50),
+        borderRadius: BorderRadius.circular(borderRadius300),
+        shadow: [BoxShadow(color: black100, blurRadius: 2)],
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Data Pemesan", style: smSemiBold),
+            const SizedBox(height: 12),
+
+            // Name
+            Text(
+              "Anastasia Caroline",
+              style: smMedium.copyWith(color: black950),
+            ),
+            const SizedBox(height: 4),
+
+            // Phone
+            Text(
+              "+628881819291",
+              style: xsRegular.copyWith(color: textDarkTertiary),
+            ),
+            const SizedBox(height: 12),
+
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isCustomerDataExpanded = !isCustomerDataExpanded;
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Jumlah Seat (2)",
+                        style: smMedium.copyWith(color: black950),
+                      ),
+                      SizedBox(width: 6),
+                      SvgPicture.asset('assets/images/ic_export.svg'),
+                    ],
+                  ),
+                  Icon(
+                    isCustomerDataExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    color: iconDarkSecondary,
+                  ),
+                ],
+              ),
+            ),
+
+            if (!isCustomerDataExpanded) ...[
+              const SizedBox(height: 4),
+              Text(
+                "12, 23",
+                style: xsRegular.copyWith(color: textDarkTertiary),
+              ),
+            ],
+
+            if (isCustomerDataExpanded) ...[
+              SizedBox(height: 12),
+
+              _buildSeatDetail("Rp120.000", "x1 Default"),
+              SizedBox(height: 8),
+              _buildSeatDetail("Rp200.000", "x1 First Class"),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTravelPayment() {
-    // Your existing implementation
-    return Container();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: CustomCard(
+        borderSide: BorderSide(width: 1, color: black50),
+        borderRadius: BorderRadius.circular(borderRadius300),
+        shadow: [BoxShadow(color: black100, blurRadius: 2)],
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Informasi Pembayaran", style: smSemiBold),
+            const SizedBox(height: 10),
+            _buildPaymentRow(
+              iconColor: iconDisabled,
+              title: "Total Harga Tiket",
+              subtitle: "Rp400.000",
+              textColor: textDarkSecondary,
+              svgAsset: 'assets/images/ic_money.svg',
+              subtitleColor: black950,
+              iconSize: 12,
+            ),
+            const SizedBox(height: 10),
+            _buildPaymentRow(
+              iconColor: iconDisabled,
+              title: "ID Membership",
+              subtitle: "SHNTK00127",
+              textColor: textDarkSecondary,
+              svgAsset: 'assets/images/profile.svg',
+              subtitleColor: black950,
+            ),
+            const SizedBox(height: 10),
+            _buildPaymentRow(
+              iconColor: iconDisabled,
+              title: "Potongan Membership 5%",
+              subtitle: "Rp20.000",
+              textColor: textDarkSecondary,
+              svgAsset: 'assets/images/ic_percent.svg',
+              subtitleColor: black950,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildPaymentMethod() {
@@ -163,6 +319,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 onItemSelected: () {
                   setState(() {
                     selectedPaymentMethod = 'Pembayaran otomatis';
+                    selectedPaymentDescription =
+                        'Lakukan pembayaran dengan berbagai bank hanya dengan satu klik saja tanpa ribet';
                   });
                   Navigator.pop(bottomSheetContext);
                 },
@@ -176,26 +334,35 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             Text("Metode Pembayaran", style: smSemiBold),
             const SizedBox(height: 12),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Pilih Metode Pembayaran",
-                        style: smRegular.copyWith(color: primaryColor),
-                      ),
-                      if (selectedPaymentMethod != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          selectedPaymentMethod!,
-                          style: xsRegular.copyWith(color: textDarkTertiary),
+                  child: selectedPaymentMethod == null
+                      ? Text(
+                          "Pilih Metode Pembayaran",
+                          style: smRegular.copyWith(color: primaryColor),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              selectedPaymentMethod!,
+                              style: smMedium.copyWith(color: black950),
+                            ),
+                            if (selectedPaymentDescription != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                selectedPaymentDescription!,
+                                style: xsRegular.copyWith(
+                                  color: textDarkTertiary,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ],
                         ),
-                      ],
-                    ],
-                  ),
                 ),
+                const SizedBox(width: 8),
                 Icon(
                   Icons.keyboard_arrow_right_rounded,
                   color: iconDarkSecondary,
@@ -205,6 +372,108 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildLocationRow({
+    required String svgAsset,
+    required Color iconColor,
+    required String title,
+    required String location,
+    required String time,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SvgPicture.asset(svgAsset, width: 16, height: 16, color: iconColor),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: xsRegular.copyWith(color: textDarkSecondary)),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Text(location, style: smMedium),
+                  const SizedBox(width: 4),
+                  Text(time, style: smMedium),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow({
+    required String svgAsset,
+    required String title,
+    required String value,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SvgPicture.asset(svgAsset, width: 16, height: 16, color: iconDisabled),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: xsRegular.copyWith(color: textDarkSecondary)),
+              const SizedBox(height: 4),
+              Text(value, style: smMedium),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentRow({
+    required String svgAsset,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+    required Color textColor,
+    Color? subtitleColor,
+    double iconSize = 16,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SvgPicture.asset(
+          svgAsset,
+          width: iconSize,
+          height: iconSize,
+          color: iconColor,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: xsRegular.copyWith(color: textDarkSecondary)),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: smMedium.copyWith(color: subtitleColor ?? textColor),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSeatDetail(String price, String seatType) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(price, style: smMedium.copyWith(color: black950)),
+        Text(seatType, style: xsRegular.copyWith(color: textDarkTertiary)),
+      ],
     );
   }
 }

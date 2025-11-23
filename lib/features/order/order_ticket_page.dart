@@ -30,6 +30,7 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
   TimeClassificationModel? selectedTimeClassification;
   FleetModel? selectedFleetClass;
   AgencyByCityModel? selectedAgencyDestination;
+
   bool get isFormComplete {
     return selectedDepartureCity != null &&
         selectedAgency != null &&
@@ -37,6 +38,18 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
         selectedDate != null &&
         selectedTimeClassification != null &&
         selectedFleetClass != null;
+  }
+
+  void _showInfoSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: jacarta800,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
   }
 
   @override
@@ -49,7 +62,6 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
           padding: const EdgeInsets.only(bottom: 100),
           child: Column(children: [_buildHeader(), _buildInput()]),
         ),
-
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(20),
           child: CustomButton(
@@ -82,7 +94,7 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
                             routes: routes,
                             selectedDate: selectedDate!,
                           ),
-                         ),
+                        ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -138,6 +150,7 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
                 setState(() {
                   selectedDepartureCity = city;
                   selectedAgency = null;
+                  selectedAgencyDestination = null;
                 });
               },
               isDeparture: true,
@@ -151,18 +164,24 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
             titleColor: black950,
             prefixSvg: "assets/images/ic_agen.svg",
             readOnly: true,
-            onTap: selectedDepartureCity != null
-                ? () => _showAgencyBottomSheet(
-                    context: context,
-                    cityId: selectedDepartureCity!.id!,
-                    selectedAgency: selectedAgency,
-                    onSelected: (agency) {
-                      setState(() {
-                        selectedAgency = agency;
-                      });
-                    },
-                  )
-                : null,
+            onTap: () {
+              if (selectedDepartureCity == null) {
+                _showInfoSnackBar(
+                  "Silakan pilih Kota Keberangkatan terlebih dahulu",
+                );
+                return;
+              }
+              _showAgencyBottomSheet(
+                context: context,
+                cityId: selectedDepartureCity!.id!,
+                selectedAgency: selectedAgency,
+                onSelected: (agency) {
+                  setState(() {
+                    selectedAgency = agency;
+                  });
+                },
+              );
+            },
           ),
           const SizedBox(height: 20),
           CustomTextField(
@@ -173,20 +192,25 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
             titleColor: black950,
             prefixSvg: "assets/images/ic_agen.svg",
             readOnly: true,
-            onTap: selectedDepartureCity != null
-                ? () => _showAgencyDestinationBottomSheet(
-                    context: context,
-                    cityId: selectedDepartureCity!.id!,
-                    selectedAgency: selectedAgencyDestination,
-                    onSelected: (agency) {
-                      setState(() {
-                        selectedAgencyDestination = agency;
-                      });
-                    },
-                  )
-                : null,
+            onTap: () {
+              if (selectedDepartureCity == null) {
+                _showInfoSnackBar(
+                  "Silakan pilih Kota Keberangkatan terlebih dahulu",
+                );
+                return;
+              }
+              _showAgencyDestinationBottomSheet(
+                context: context,
+                cityId: selectedDepartureCity!.id!,
+                selectedAgency: selectedAgencyDestination,
+                onSelected: (agency) {
+                  setState(() {
+                    selectedAgencyDestination = agency;
+                  });
+                },
+              );
+            },
           ),
-
           const SizedBox(height: 20),
           Row(
             children: [
@@ -229,15 +253,23 @@ class _OrderTicketPageState extends State<OrderTicketPage> {
                   titleColor: black950,
                   prefixSvg: "assets/images/ic_time.svg",
                   readOnly: true,
-                  onTap: () => _showTimeClassificationBottomSheet(
-                    context: context,
-                    selectedTimeClassification: selectedTimeClassification,
-                    onSelected: (timeClassification) {
-                      setState(() {
-                        selectedTimeClassification = timeClassification;
-                      });
-                    },
-                  ),
+                  onTap: () {
+                    if (selectedDate == null) {
+                      _showInfoSnackBar(
+                        "Silakan pilih Tanggal Berangkat terlebih dahulu",
+                      );
+                      return;
+                    }
+                    _showTimeClassificationBottomSheet(
+                      context: context,
+                      selectedTimeClassification: selectedTimeClassification,
+                      onSelected: (timeClassification) {
+                        setState(() {
+                          selectedTimeClassification = timeClassification;
+                        });
+                      },
+                    );
+                  },
                 ),
               ),
             ],
